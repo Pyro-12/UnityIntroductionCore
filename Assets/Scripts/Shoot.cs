@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class Shoot : MonoBehaviour
 {
-    #region
+    #region Data
     [Header ("Shoot")]
     [SerializeField] GameObject projectile;
     [SerializeField] float speed;
@@ -11,8 +11,22 @@ public class Shoot : MonoBehaviour
     [Space(10)][Header("Weapon stats")]
     [SerializeField] float range = 50;
     [SerializeField] float damage = 10f;
+    [SerializeField] int maxAmmo = 10;
+    [SerializeField] int currentAmmo = 10;
+    [SerializeField] float fireRate = 100f;
     #endregion
+    #region Auxiliary data
+    //AUXILIARY DATA
+    [SerializeField] bool canShoot;
+    [SerializeField] bool isReloading;
+    #endregion
+    #region
+    private void Start()
+    {
+        isReloading = false;
 
+    }
+    #endregion
     #region Script's logic
     private void Update()
     {
