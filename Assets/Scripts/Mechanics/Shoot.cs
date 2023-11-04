@@ -74,7 +74,7 @@ public class Shoot : MonoBehaviour
     #region Input logic
     public void OnFire(InputAction.CallbackContext context)
     {
-        // check if tit's being done.
+        // check if it's being done.
         if (context.performed)
         {
             Debug.Log("Btt shoot pressed");
@@ -83,6 +83,7 @@ public class Shoot : MonoBehaviour
         else if (context.canceled)
         {
             // Puedes manejar algo específico cuando se deja de presionar el botón
+            //Hacer animacion de que no tenga balas
         }
     }
     #endregion
