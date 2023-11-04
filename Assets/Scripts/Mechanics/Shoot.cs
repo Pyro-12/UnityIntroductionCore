@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.InputSystem;
 
 public class Shoot : MonoBehaviour
@@ -17,6 +18,7 @@ public class Shoot : MonoBehaviour
     #endregion
     #region Auxiliary data
     //AUXILIARY DATA
+    
     [SerializeField] bool canShoot;
     [SerializeField] bool isReloading;
     #endregion
@@ -25,6 +27,17 @@ public class Shoot : MonoBehaviour
     {
         isReloading = false;
 
+    }
+    private void OnEnable()
+    {
+        InputSystem.EnableDevice(Gamepad.current);
+        InputSystem.EnableDevice(Keyboard.current);
+    }
+
+    private void OnDisable()
+    {
+        InputSystem.DisableDevice(Gamepad.current);
+        InputSystem.DisableDevice(Keyboard.current);
     }
     #endregion
     #region Script's logic
@@ -43,21 +56,35 @@ public class Shoot : MonoBehaviour
 
             Destroy(bala, 2f);
 
-            // Reinicia el estado de shootPressed para evitar múltiples disparos en una sola pulsación
-            shootPressed = false;
-        }
-
-        else
-        {
+            // Avoid multi-shots
             shootPressed = false;
         }
 
     }
 
-    void OnFire(InputValue value)
+    //Creates the rapid fire shot
+    public IEnumerator RapidFire() 
     {
-        Debug.Log("Btt shoot pressed");
-        shootPressed = value.isPressed;
+        while (true)
+        {
+            Fire();
+            yield return new WaitForSeconds(1 / fireRate);
+        }
     }
+    #region Input logic
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        // check if tit's being done.
+        if (context.performed)
+        {
+            Debug.Log("Btt shoot pressed");
+            shootPressed = true;
+        }
+        else if (context.canceled)
+        {
+            // Puedes manejar algo específico cuando se deja de presionar el botón
+        }
+    }
+    #endregion
     #endregion
 }

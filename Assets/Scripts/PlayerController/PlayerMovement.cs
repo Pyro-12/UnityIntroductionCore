@@ -113,10 +113,10 @@ public class PlayerMovement: MonoBehaviour
     }*/ //con este sistema solo se bloquea el jugador para mirar alrededor. Revisar para ajustar a la camara
 
     #region Inputs messages
-    void OnMove(InputValue value)
+    public void OnMove(InputAction.CallbackContext context)
     {
-        Debug.Log("Move input received: " + value.Get<Vector2>());
-        moveDirection = value.Get<Vector2>();
+        Debug.Log("Move input received: " + moveDirection);
+        moveDirection = context.ReadValue<Vector2>();
     }
     void OnJump(InputValue value)
     {
