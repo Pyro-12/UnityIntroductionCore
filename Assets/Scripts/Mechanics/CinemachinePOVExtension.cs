@@ -14,13 +14,13 @@ public class CinemachinePOVExtension : CinemachineExtension
     [SerializeField] private float _verticalSpeed = 1.0f;
 
     [SerializeField] private float _clampAngle = 80.0f;
-    private PlayerInput playerInput;
+    private PlayerInputController playerInputController;
     private Vector3 startingRotation;
     #endregion
 
     protected override void Awake()
     {
-       // playerInput = PlayerInput.Instance; 
+        playerInputController = PlayerInputController.Instance; 
         base.Awake();
     }
     protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
@@ -30,7 +30,7 @@ public class CinemachinePOVExtension : CinemachineExtension
             if (stage == CinemachineCore.Stage.Aim)
             {
                 if (startingRotation == null) startingRotation = transform.localRotation.eulerAngles;
-              //  Vector2 delta = playerInput.GetMouseDelta();//ver como coger las 3 acciones
+                Vector2 delta = playerInputController.GetMouseDelta();//ver como coger las 3 acciones
                 startingRotation.x += delta.x * Time.deltaTime;
                 startingRotation.y += delta.y * Time.deltaTime;
                 startingRotation.y = Mathf.Clamp(startingRotation.y, -_clampAngle, _clampAngle);

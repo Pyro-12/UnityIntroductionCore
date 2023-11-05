@@ -2,7 +2,7 @@
     "name": "PlayerInput",
     "maps": [
         {
-            "name": "Player",
+            "name": "InGame",
             "id": "231b174d-f938-490b-81db-5c809e14fbf6",
             "actions": [
                 {
@@ -34,7 +34,7 @@
                 },
                 {
                     "name": "Move",
-                    "type": "PassThrough",
+                    "type": "Value",
                     "id": "0b8bbb0a-9185-4c14-9f72-54e169ff87d7",
                     "expectedControlType": "Vector2",
                     "processors": "",

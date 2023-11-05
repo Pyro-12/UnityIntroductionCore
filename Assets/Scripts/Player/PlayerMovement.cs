@@ -23,16 +23,16 @@ public class PlayerMovement: MonoBehaviour
     #region Auxiliary data
     //AUXILIARY DATA 
     private float playerVelocity;
-    PlayerInput playerInput;
+    PlayerInputController playerInputController;
     private float targetRotation; 
     [SerializeField] bool isGrounded;
     private bool jumpPressed = false;
     private float verticalVelocity;
     #endregion
     #region Initialize script
-    void Start()
+    private void Awake()
     {
-
+        playerInputController = PlayerInputController.Instance;
     }
     #endregion
     #region Script's logic
@@ -45,26 +45,26 @@ public class PlayerMovement: MonoBehaviour
     }
     void Move()
     {
-       // if (moveDirection == Vector2.zero) targetSpeed = 0;
-      
-        Vector3 move = new Vector3(moveDirection.x, 0, moveDirection.y).normalized;
+        // Utiliza las acciones del PlayerInputController
+        Vector3 move = new Vector3(playerInputController.moveDirection.x, 0, playerInputController.moveDirection.y).normalized;
 
         // Rotate when there's player input movement
-         if (moveDirection != Vector2.zero)
-         {
-             targetRotation = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;
+        if (move != Vector3.zero)
+        {
+            targetRotation = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg;
 
-             // Rotate the player towards the target direction smoothly
-             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity, rotationSmooth);
-             transform.eulerAngles = new Vector3(0, rotation, 0);
-             // rotate relative to camera position
-             transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-         }
+            // Rotate the player towards the target direction smoothly
+            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity, rotationSmooth);
+            transform.eulerAngles = new Vector3(0, rotation, 0);
+            // rotate relative to camera position
+            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+        }
 
-         Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
-         Vector3 newPosition = transform.position + (new Vector3(moveDirection.x, verticalVelocity, moveDirection.y) * Time.deltaTime);
-         // Set the new input player position
-         transform.position = newPosition;
+        Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
+        Vector3 newPosition = transform.position + (new Vector3(move.x, verticalVelocity, move.z) * Time.deltaTime);
+        // Set the new input player position
+        transform.position = newPosition;
+        moveDirection = playerInputController.moveDirection;
     }
     void Jump()
     {
@@ -88,30 +88,7 @@ public class PlayerMovement: MonoBehaviour
         }
     }
 
-  /*  void RotateCamera ()
-    {
-        Vector3 move = new Vector3(moveDirection.x, 0, moveDirection.y).normalized;
-
-        // Rotar el jugador solo si hay movimiento
-        if (move.magnitude > 0.0f)
-        {
-            targetRotation = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;
-        }
-
-        Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
-        Vector3 newPosition = transform.position + (targetDirection * speed * Time.deltaTime);
-
-        // Añadir sistema de gravedad al movimiento del jugador
-        verticalVelocity += gravity * Time.deltaTime;
-
-        // Ajustar nueva posición
-        newPosition.y += verticalVelocity * Time.deltaTime;
-
-        // Rotar el jugador hacia la dirección objetivo suavemente
-        float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity, rotationSmooth);
-        transform.eulerAngles = new Vector3(0, rotation, 0);
-    }*/ //con este sistema solo se bloquea el jugador para mirar alrededor. Revisar para ajustar a la camara
-
+  
     #region Inputs messages
     public void OnMove(InputAction.CallbackContext context)
     {
