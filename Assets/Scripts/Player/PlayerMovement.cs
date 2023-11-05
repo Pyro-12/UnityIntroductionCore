@@ -31,6 +31,7 @@ public class PlayerMovement: MonoBehaviour
     //AUXILIARY DATA 
     [SerializeField]PlayerInputController playerInputController;
     [SerializeField] GameObject _mainCamera;
+    CharacterController _controller;
     //Movement aux data
     private float targetRotation;
     //Jump aux data
@@ -54,6 +55,7 @@ public class PlayerMovement: MonoBehaviour
     {
         // Intenta encontrar un objeto con el script PlayerInputController adjunto.
         playerInputController = FindObjectOfType<PlayerInputController>();
+        _controller = GetComponent<CharacterController>();
 
         // Aseg�rate de que playerInputController no sea nulo despu�s de la b�squeda.
         if (playerInputController == null)
@@ -77,7 +79,13 @@ public class PlayerMovement: MonoBehaviour
         // Verifica si playerInputController es nulo antes de usarlo.
         if (playerInputController != null)
         {
+            float targetSpeed = speed;
+            if (playerInputController.moveDirection == Vector2.zero) targetSpeed = 0.0f;
+            
             Vector3 move = new Vector3(playerInputController.moveDirection.x, 0, playerInputController.moveDirection.y).normalized;
+            
+            Vector3 currentHorizontalSpeed =
+                new Vector3(playerInputController.moveDirection.x, 0.0f, playerInputController.moveDirection.y);
 
             if (move != Vector3.zero)
             {
@@ -91,7 +99,17 @@ public class PlayerMovement: MonoBehaviour
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
             Vector3 newPosition = transform.position + (new Vector3(move.x, verticalVelocity, move.z) * Time.deltaTime);
-            transform.position = newPosition;
+            
+            currentHorizontalSpeed = _mainCamera.transform.forward * currentHorizontalSpeed.z +
+                                     _mainCamera.transform.right * currentHorizontalSpeed.x;
+            currentHorizontalSpeed.y = 0.0f;
+            float currentHorizontalSpeedMagnitude = currentHorizontalSpeed.magnitude;
+            
+            
+            
+            _controller.Move(targetDirection.normalized *
+                             (currentHorizontalSpeedMagnitude * Time.deltaTime * targetSpeed) +
+                             new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
         }
         else
         {
