@@ -15,10 +15,13 @@ public class Shoot : MonoBehaviour
     [SerializeField] int maxAmmo = 10;
     [SerializeField] int currentAmmo = 10;
     [SerializeField] float fireRate = 100f;
+    [Header("Postpo")]
+    [SerializeField] private ParticleSystem shootParticle;
+    [SerializeField] private AudioSource shootAudioSource;
     #endregion
     #region Auxiliary data
     //AUXILIARY DATA
-    
+
     [SerializeField] bool canShoot;
     [SerializeField] bool isReloading;
     #endregion
@@ -62,7 +65,25 @@ public class Shoot : MonoBehaviour
 
     }
 
-    //Creates the rapid fire shot
+    void PlayAudioAndSFX ()
+    {
+        if (shootPressed)
+        {
+            shootAudioSource.Play();
+        }
+        if (shootPressed)
+        {
+            
+            shootParticle.Play();
+        }
+
+        else
+        {
+            Debug.Log("No audio/SFX found");
+        }
+    }
+
+    //Creates the rapid fire shot --Poir finalizar
     public IEnumerator RapidFire() 
     {
         while (true)
@@ -79,6 +100,7 @@ public class Shoot : MonoBehaviour
         {
             Debug.Log("Btt shoot pressed");
             shootPressed = true;
+            PlayAudioAndSFX();
         }
         else if (context.canceled)
         {

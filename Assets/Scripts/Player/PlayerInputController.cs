@@ -21,12 +21,16 @@ public class PlayerInputController : MonoBehaviour
         {
             instance = this;
         }
+
         Cursor.visible = false;
         GetReferences();
     }
 
-    private void Start()
+    private void GetReferences()
     {
+        // Cambié la inicialización de playerInput para usar el sistema de entrada.
+        playerInput = new PlayerInput();
+        playerInput.Enable();
         SubscribeToDelegatesAndUpdateValues();
     }
 
@@ -43,26 +47,24 @@ public class PlayerInputController : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInput.Enable();
+        // playerInput.Enable(); No necesitas llamarlo aquí, ya se llama en GetReferences.
     }
 
     private void OnDisable()
     {
-        playerInput.Disable();
+        // playerInput.Disable(); No necesitas llamarlo aquí.
+        UnsubscribeToDelegates();
     }
 
     private void UnsubscribeToDelegates()
     {
         playerInput.InGame.Move.started -= OnMove;
         playerInput.InGame.Move.performed -= OnMove;
+        playerInput.InGame.Move.canceled -= OnMove;
 
         playerInput.InGame.Jump.started -= OnJump;
         playerInput.InGame.Jump.performed -= OnJump;
-    }
-
-    private void GetReferences()
-    {
-        playerInput = new PlayerInput();
+        playerInput.InGame.Jump.canceled -= OnJump;
     }
 
     public void OnMove(InputAction.CallbackContext value)
@@ -72,17 +74,20 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext value)
     {
+        Debug.Log("Jump");
         JumpInput(value.ReadValue<float>());
     }
 
     private void JumpInput(float newJumpState)
     {
-        jump = newJumpState > 0;
-    }
-
-    private void MoveInput(Vector2 newMoveDirection)
-    {
-        moveDirection = newMoveDirection;
+        if (newJumpState > 0)
+        {
+            jump = true;
+        }
+        else
+        {
+            jump = false;
+        }
     }
 
     public Vector2 GetMouseDelta()
