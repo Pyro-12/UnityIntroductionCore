@@ -75,22 +75,15 @@ public class PlayerInputController : MonoBehaviour
     public void OnJump(InputAction.CallbackContext value)
     {
         Debug.Log("Jump");
-        JumpInput(value.ReadValue<float>());
+        jump = value.ReadValue<float>() > 0.5f;
     }
 
-    private void JumpInput(float newJumpState)
+    public void UpdateJumpState(bool newJumpState)
     {
-        if (newJumpState > 0)
-        {
-            jump = true;
-        }
-        else
-        {
-            jump = false;
-        }
+        jump = newJumpState;
     }
 
-    public Vector2 GetMouseDelta()
+    public Vector2 GetMouseDelta() //Revisar por que no va el joystick R
     {
         return playerInput.InGame.Look.ReadValue<Vector2>();
     }

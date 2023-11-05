@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
+[RequireComponent(typeof(PlayerInputController))]
 public class PlayerMovement: MonoBehaviour
 {
     #region Data
@@ -14,8 +14,13 @@ public class PlayerMovement: MonoBehaviour
 
     [Space(10)] 
     [Header("Jump")]
+    [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
+    public float FallTimeout = 0.15f;
     [SerializeField] float gravity = -9.81f; //stiamted, unity use his own gravity system
-    [SerializeField] float jumpForce;
+    [SerializeField] float jumpHeight;
+    [Space(10)]
+    [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
+    public float JumpTimeout = 0.50f;
 
     [Space(10)] [Header("Player is grounded")] [Tooltip ("Scans the assignated layer in order to create the jump action")] [SerializeField] LayerMask GroundLayer;
     [SerializeField] public float GroundedOffset = -0.14f;
@@ -24,12 +29,17 @@ public class PlayerMovement: MonoBehaviour
 
     #region Auxiliary data
     //AUXILIARY DATA 
-    private float playerVelocity;
     [SerializeField]PlayerInputController playerInputController;
-    private float targetRotation; 
+    //Movement aux data
+    private float targetRotation;
+    //Jump aux data
     [SerializeField] bool isGrounded;
-    private bool jumpPressed = false;
+    private Vector3 playerVelocity;
     private float verticalVelocity;
+    // timeout jump
+    private float jumpTimeoutDelta;
+    private float fallTimeoutDelta;
+    private float _terminalVelocity = 53.0f;
     #endregion
     #region Initialize script
     private void Awake()
@@ -70,10 +80,11 @@ public class PlayerMovement: MonoBehaviour
             {
                 targetRotation = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg;
 
-                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity, rotationSmooth);
+                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity.y, rotationSmooth);
                 transform.eulerAngles = new Vector3(0, rotation, 0);
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
+
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
             Vector3 newPosition = transform.position + (new Vector3(move.x, verticalVelocity, move.z) * Time.deltaTime);
@@ -88,8 +99,8 @@ public class PlayerMovement: MonoBehaviour
     void GroundCheck()
     {
         // set sphere position, with offset
-        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-        isGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayer, QueryTriggerInteraction.Ignore);
+        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,  transform.position.z);
+        isGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayer,QueryTriggerInteraction.Ignore);
         // if (_hasAnimator)
         // {
         //     _animator.SetBool(_animIDOnGround, Grounded);
@@ -97,41 +108,63 @@ public class PlayerMovement: MonoBehaviour
     }
     void Jump()
     {
-        if (isGrounded)
-        {// stop our velocity dropping when grounded
-            if (playerVelocity < 0.0f)
-            {
-                playerVelocity = -5f;
-            }
-            //Jump
-            if (jumpPressed)
-            {
+ 
 
-                verticalVelocity = Mathf.Sqrt(jumpForce * -2f * gravity);
+        // stop our velocity dropping when grounded
+        if (isGrounded)
+        {
+            // reset the fall timeout timer
+            fallTimeoutDelta = FallTimeout;
+
+            playerVelocity.y = 0.0f;
+            // stop our velocity dropping infinitely when grounded
+            if (verticalVelocity < 0.0f)
+            {
+                verticalVelocity = -2f;
+            }
+            // Jump pressed and player on ground
+            if (playerInputController.jump && jumpTimeoutDelta <= 0.0f)
+            {
+                Debug.Log("Salto");
+                verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+            }
+            // jump timeout
+            if (jumpTimeoutDelta >= 0.0f)
+            {
+                jumpTimeoutDelta -= Time.deltaTime;
             }
         }
 
         else
         {
+            // reset the jump timeout timer
+            jumpTimeoutDelta = JumpTimeout;
 
+            // fall timeout
+            if (fallTimeoutDelta >= 0.0f)
+            {
+                fallTimeoutDelta -= Time.deltaTime;
+            }
             // if we are not grounded, do not jump
             playerInputController.jump = false;
         }
+
+        // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+        if (verticalVelocity < _terminalVelocity)
+        {
+            // if (_hasAnimator)
+            // {
+            //     _animator.SetFloat(_animIDJumpVelocity, _verticalVelocity);
+            // }
+            verticalVelocity += gravity * Time.deltaTime;
+        }
+        // playerVelocity.y += gravity * Time.deltaTime;
+
+
+
     }
 
-  
-    #region Inputs messages
-  /*  public void OnMove(InputAction.CallbackContext context)
-    {
-        Debug.Log("Move input received: " + moveDirection);
-        moveDirection = context.ReadValue<Vector2>();
-    }
-    void OnJump(InputValue value)
-    {
-        Debug.Log("buttonpressed");
-        jumpPressed = value.Get<float>() > 0.5f;
-    }*/
-    #endregion
     #endregion
 
 }
