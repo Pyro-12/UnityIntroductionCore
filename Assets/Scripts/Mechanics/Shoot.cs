@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
@@ -33,8 +34,15 @@ public class Shoot : MonoBehaviour
     }
     private void OnEnable()
     {
-        InputSystem.EnableDevice(Gamepad.current);
-        InputSystem.EnableDevice(Keyboard.current);
+        try
+        {
+            InputSystem.EnableDevice(Gamepad.current);
+            InputSystem.EnableDevice(Keyboard.current);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("No se ha encontrado el componente " + e);
+        }
     }
 
     private void OnDisable()
@@ -104,7 +112,7 @@ public class Shoot : MonoBehaviour
         }
         else if (context.canceled)
         {
-            // Puedes manejar algo específico cuando se deja de presionar el botón
+            // Puedes manejar algo especï¿½fico cuando se deja de presionar el botï¿½n
             //Hacer animacion de que no tenga balas
         }
     }

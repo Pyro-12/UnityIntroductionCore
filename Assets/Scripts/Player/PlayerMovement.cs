@@ -10,7 +10,6 @@ public class PlayerMovement: MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] [Range(0.0f, 10f)]  float sprint = 10f;
     [SerializeField] [Range(0.0f, 0.3f)] float rotationSmooth= 0.05f; // TO-DO rotacion en mov
-    private Vector2 moveDirection;
 
     [Space(10)] 
     [Header("Jump")]
@@ -28,8 +27,10 @@ public class PlayerMovement: MonoBehaviour
     #endregion
 
     #region Auxiliary data
+    
     //AUXILIARY DATA 
     [SerializeField]PlayerInputController playerInputController;
+    [SerializeField] GameObject _mainCamera;
     //Movement aux data
     private float targetRotation;
     //Jump aux data
@@ -40,7 +41,9 @@ public class PlayerMovement: MonoBehaviour
     private float jumpTimeoutDelta;
     private float fallTimeoutDelta;
     private float _terminalVelocity = 53.0f;
+    
     #endregion
+    
     #region Initialize script
     private void Awake()
     {
@@ -52,7 +55,7 @@ public class PlayerMovement: MonoBehaviour
         // Intenta encontrar un objeto con el script PlayerInputController adjunto.
         playerInputController = FindObjectOfType<PlayerInputController>();
 
-        // Asegúrate de que playerInputController no sea nulo después de la búsqueda.
+        // Asegï¿½rate de que playerInputController no sea nulo despuï¿½s de la bï¿½squeda.
         if (playerInputController == null)
         {
             Debug.LogError("PlayerInputController not found in the scene. Make sure it is attached to an object.");
@@ -79,9 +82,9 @@ public class PlayerMovement: MonoBehaviour
             if (move != Vector3.zero)
             {
                 targetRotation = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg;
+                                 //_mainCamera.transform.eulerAngles.y;
 
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity.y, rotationSmooth);
-                transform.eulerAngles = new Vector3(0, rotation, 0);
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
 
@@ -89,7 +92,6 @@ public class PlayerMovement: MonoBehaviour
             Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
             Vector3 newPosition = transform.position + (new Vector3(move.x, verticalVelocity, move.z) * Time.deltaTime);
             transform.position = newPosition;
-            moveDirection = playerInputController.moveDirection;
         }
         else
         {

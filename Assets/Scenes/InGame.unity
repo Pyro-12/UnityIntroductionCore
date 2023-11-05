@@ -9634,6 +9634,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2071238584 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8627398765708149023, guid: 6f7c3b3a5dd4d0642b94ae7da454041e, type: 3}
+  m_PrefabInstance: {fileID: 3427445327243782565}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2071238587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071238584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5387a3e3901a5cd48b2f1e08b322dc5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _horizontalSpeed: 20
+  _verticalSpeed: 20
+  _clampAngle: 80
 --- !u!1001 &3427445327243782565
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9654,6 +9674,10 @@ PrefabInstance:
       propertyPath: jumpHeight
       value: 1.2
       objectReference: {fileID: 0}
+    - target: {fileID: 2173423892639317568, guid: 6f7c3b3a5dd4d0642b94ae7da454041e, type: 3}
+      propertyPath: _mainCamera
+      value: 
+      objectReference: {fileID: 2071238584}
     - target: {fileID: 2173423892639317568, guid: 6f7c3b3a5dd4d0642b94ae7da454041e, type: 3}
       propertyPath: GroundLayer.m_Bits
       value: 9
@@ -9721,7 +9745,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8627398765708149023, guid: 6f7c3b3a5dd4d0642b94ae7da454041e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2071238587}
   m_SourcePrefab: {fileID: 100100000, guid: 6f7c3b3a5dd4d0642b94ae7da454041e, type: 3}
 --- !u!20 &7872897319404938968 stripped
 Camera:
