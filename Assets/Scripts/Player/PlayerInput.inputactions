@@ -7,7 +7,7 @@
             "actions": [
                 {
                     "name": "Look",
-                    "type": "PassThrough",
+                    "type": "Value",
                     "id": "c50cbda1-f173-4cb5-9ae1-464b5929e14b",
                     "expectedControlType": "Vector2",
                     "processors": "",
@@ -75,7 +75,7 @@
                     "id": "c1f7a91b-d0fd-4a62-997e-7fb9b69bf235",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "ScaleVector2(x=10,y=10)",
                     "groups": ";Gamepad",
                     "action": "Look",
                     "isComposite": false,
