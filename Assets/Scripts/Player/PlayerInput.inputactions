@@ -42,9 +42,27 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "New action1",
+                    "name": "Dash",
                     "type": "Button",
                     "id": "dad5182d-ec87-4898-b02e-9d2f2351e1f8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "bfc4dec5-83bf-4d3a-8911-18d378cb0b67",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Aim",
+                    "type": "Button",
+                    "id": "f5ecce60-7161-4041-9d0b-4d6da11148b4",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -175,12 +193,23 @@
                 },
                 {
                     "name": "",
-                    "id": "a7bbd3d0-5f6b-4730-8bf0-7e46fd83fc79",
+                    "id": "01ed5b70-cbec-40b4-972b-abde685170b0",
                     "path": "",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action1",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8fd0ce77-5956-4e4a-82e2-b5e89caa684b",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -291,6 +320,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8069a603-3f0d-4135-8c53-1aa56d3d5550",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ed81a56f-30de-4b4e-8079-ab451c48c6f3",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
