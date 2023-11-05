@@ -28,7 +28,6 @@ public class PlayerInputController : MonoBehaviour
 
     private void GetReferences()
     {
-        // Cambié la inicialización de playerInput para usar el sistema de entrada.
         playerInput = new PlayerInput();
         playerInput.Enable();
         SubscribeToDelegatesAndUpdateValues();
@@ -78,12 +77,22 @@ public class PlayerInputController : MonoBehaviour
         jump = value.ReadValue<float>() > 0.5f;
     }
 
+    public void OnDash()
+    {
+
+    }
+
+    public void OnRun ()
+    {
+
+    }
+
     public void UpdateJumpState(bool newJumpState)
     {
         jump = newJumpState;
     }
 
-    public Vector2 GetMouseDelta() //Revisar por que no va el joystick R
+    public Vector2 GetMouseDelta() //Revisar diferencia rate joystick-keyboard
     {
         return playerInput.InGame.Look.ReadValue<Vector2>();
     }

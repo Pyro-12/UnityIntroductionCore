@@ -33,6 +33,7 @@ public class PlayerMovement: MonoBehaviour
     [SerializeField] GameObject _mainCamera;
     CharacterController _controller;
     //Movement aux data
+    public GameObject MainCamera => _mainCamera;
     private float targetRotation;
     //Jump aux data
     [SerializeField] bool isGrounded;
@@ -57,7 +58,6 @@ public class PlayerMovement: MonoBehaviour
         playerInputController = FindObjectOfType<PlayerInputController>();
         _controller = GetComponent<CharacterController>();
 
-        // Aseg�rate de que playerInputController no sea nulo despu�s de la b�squeda.
         if (playerInputController == null)
         {
             Debug.LogError("PlayerInputController not found in the scene. Make sure it is attached to an object.");
@@ -90,7 +90,6 @@ public class PlayerMovement: MonoBehaviour
             if (move != Vector3.zero)
             {
                 targetRotation = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg;
-                                 //_mainCamera.transform.eulerAngles.y;
 
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity.y, rotationSmooth);
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
@@ -118,7 +117,6 @@ public class PlayerMovement: MonoBehaviour
     }
     void GroundCheck()
     {
-        // set sphere position, with offset
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,  transform.position.z);
         isGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayer,QueryTriggerInteraction.Ignore);
         // if (_hasAnimator)
@@ -179,10 +177,6 @@ public class PlayerMovement: MonoBehaviour
             // }
             verticalVelocity += gravity * Time.deltaTime;
         }
-        // playerVelocity.y += gravity * Time.deltaTime;
-
-
-
     }
 
     #endregion
