@@ -6548,11 +6548,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 889e373b6a2838f4c91bd5cff9972b65, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -7268,7 +7268,7 @@ GameObject:
   - component: {fileID: 944320441}
   - component: {fileID: 944320442}
   m_Layer: 0
-  m_Name: stamina
+  m_Name: staminaController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7303,6 +7303,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   staminaDrain: 0.5
   staminaRegen: 0.5
+  staminaImg: {fileID: 733778739}
+  staminaPanel: {fileID: 2122270027}
 --- !u!1 &946786948
 GameObject:
   m_ObjectHideFlags: 0
@@ -9610,6 +9612,11 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!4 &1882955005 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8449353067275288995, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+  m_PrefabInstance: {fileID: 4072341887506531792}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1929117389
 GameObject:
   m_ObjectHideFlags: 0
@@ -10288,6 +10295,18 @@ PrefabInstance:
       propertyPath: shootParticle
       value: 
       objectReference: {fileID: 398504744}
+    - target: {fileID: 3122993405476340472, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 3122993405476340472, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_ActionId
+      value: 1edcee75-fd5f-4259-a7d2-43a09be77a3c
+      objectReference: {fileID: 0}
+    - target: {fileID: 3122993405476340472, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_ActionName
+      value: InGame/Sprint[/DualShock4GamepadHID/rightShoulder]
+      objectReference: {fileID: 0}
     - target: {fileID: 5064117049632910717, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10330,14 +10349,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6196117786602156608, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.56100005
+      objectReference: {fileID: 0}
+    - target: {fileID: 7054497303893602088, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: stamina
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7054497303893602088, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: isGrounded
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7054497303893602088, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
       propertyPath: _mainCamera
       value: 
       objectReference: {fileID: 6352914594219796666}
     - target: {fileID: 7054497303893602088, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: isSprinting
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7054497303893602088, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
       propertyPath: shouldFollow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7054497303893602088, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: staminaRegenerated
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7273360907871123116, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -10354,7 +10393,7 @@ Transform:
   m_GameObject: {fileID: 6352914594219796666}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.19999999, z: -37.5}
+  m_LocalPosition: {x: 0, y: 0.36100006, z: -37.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10428,7 +10467,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 8068549969508079907}
-  m_Follow: {fileID: 8068549969508079907}
+  m_Follow: {fileID: 1882955005}
   m_Lens:
     FieldOfView: 60.000004
     OrthographicSize: 5

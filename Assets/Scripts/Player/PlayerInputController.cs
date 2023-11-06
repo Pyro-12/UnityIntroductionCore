@@ -44,6 +44,10 @@ public class PlayerInputController : MonoBehaviour
         playerInput.InGame.Jump.started += OnJump;
         playerInput.InGame.Jump.performed += OnJump;
         playerInput.InGame.Jump.canceled += OnJump;
+
+        playerInput.InGame.Sprint.started += OnSprint;
+        playerInput.InGame.Sprint.performed += OnSprint;
+        playerInput.InGame.Sprint.canceled += OnSprint;
     }
 
     private void OnEnable()
@@ -66,6 +70,10 @@ public class PlayerInputController : MonoBehaviour
         playerInput.InGame.Jump.started -= OnJump;
         playerInput.InGame.Jump.performed -= OnJump;
         playerInput.InGame.Jump.canceled -= OnJump;
+
+        playerInput.InGame.Sprint.started -= OnSprint;
+        playerInput.InGame.Sprint.performed -= OnSprint;
+        playerInput.InGame.Sprint.canceled -= OnSprint;
     }
 
     public void OnMove(InputAction.CallbackContext value)
@@ -79,9 +87,9 @@ public class PlayerInputController : MonoBehaviour
         jump = value.ReadValue<float>() > 0.5f;
     }
 
-    public void OnSprint (InputAction.CallbackContext value)
+    public void OnSprint(InputAction.CallbackContext value)
     {
-        Debug.Log("Sprint");
+        Debug.Log("Sprint input detected: " + value.ReadValue<float>());
         sprint = value.ReadValue<float>() > 0f;
     }
 

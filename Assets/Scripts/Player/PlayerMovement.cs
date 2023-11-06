@@ -219,20 +219,19 @@ public class PlayerMovement: MonoBehaviour
     }
     void Sprint()
     {
-        bool isSprinting = playerInputController.IsSprinting() && stamina > 0;
-        Debug.Log("Is Sprinting: " + isSprinting);
-        staminaRegenerated = isSprinting;
-        /*  if (staminaRegenerated)
-          {
-              isSprinting = true;
-              // stamina -= staminaDrain * Time.deltaTime;
-          }
+        bool shouldSprint = playerInputController.IsSprinting() && stamina > 0 && staminaRegenerated;
 
-          if (stamina <= 0)
-          {
-              staminaRegenerated = false;
-              //staminaCanvas.alpha = 0;//ver como manejar el UGUI desde el controller
-          }*/
+        if (shouldSprint)
+        {
+            IsSprinting = true;
+        }
+        else
+        {
+            IsSprinting = false;
+        }
+
+        staminaRegenerated = IsSprinting;
+
     }
     #endregion
 
