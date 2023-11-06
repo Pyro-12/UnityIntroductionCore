@@ -10,6 +10,8 @@ public class PlayerInputController : MonoBehaviour
     [HideInInspector] public bool jump;
     [HideInInspector] public bool dash;
     [HideInInspector] public bool run;
+    [HideInInspector] public bool sprint;
+
 
     private void Awake()
     {
@@ -77,6 +79,12 @@ public class PlayerInputController : MonoBehaviour
         jump = value.ReadValue<float>() > 0.5f;
     }
 
+    public void OnSprint (InputAction.CallbackContext value)
+    {
+        Debug.Log("Sprint");
+        sprint = value.ReadValue<float>() > 0f;
+    }
+
     public void OnDash()
     {
 
@@ -90,6 +98,10 @@ public class PlayerInputController : MonoBehaviour
     public void UpdateJumpState(bool newJumpState)
     {
         jump = newJumpState;
+    }
+    public bool IsSprinting()
+    {
+        return sprint;
     }
 
     public Vector2 GetMouseDelta() //Revisar diferencia rate joystick-keyboard

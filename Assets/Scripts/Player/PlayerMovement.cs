@@ -8,7 +8,7 @@ public class PlayerMovement: MonoBehaviour
     #region Data
     [Header("Player")]
     [SerializeField] float speed;
-    [SerializeField] [Range(0.0f, 10f)]  float sprint = 10f;
+    [SerializeField] [Range(0.0f, 10f)]  float stamina = 10f;
     [SerializeField] [Range(0.0f, 0.3f)] float rotationSmooth= 0.05f; // TO-DO rotacion en mov
 
     [Space(10)] 
@@ -24,17 +24,23 @@ public class PlayerMovement: MonoBehaviour
     [Space(10)] [Header("Player is grounded")] [Tooltip ("Scans the assignated layer in order to create the jump action")] [SerializeField] LayerMask GroundLayer;
     [SerializeField] public float GroundedOffset = -0.14f;
     [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")][SerializeField] public float GroundedRadius = 0.28f;
+
     #endregion
 
     #region Auxiliary data
-    
+
     //AUXILIARY DATA 
-    [SerializeField]PlayerInputController playerInputController;
+    [SerializeField] PlayerInputController playerInputController;
     [SerializeField] GameObject _mainCamera;
     CharacterController _controller;
+    StaminaController staminaController;
     //Movement aux data
     public GameObject MainCamera => _mainCamera;
     private float targetRotation;
+    //Stamina
+    private float maxStamina = 10f;
+    public bool staminaRegenerated = true;//añadir el hide in inspector
+    public bool isSprinting = true;//añadir el hide in inspector
     //Jump aux data
     [SerializeField] bool isGrounded;
     private Vector3 playerVelocity;
@@ -43,9 +49,38 @@ public class PlayerMovement: MonoBehaviour
     private float jumpTimeoutDelta;
     private float fallTimeoutDelta;
     private float _terminalVelocity = 53.0f;
-    
+
+     // Nuevas propiedades para encapsular targetRotation, stamina y otras
+      private float TargetRotation
+      {
+          get { return targetRotation; }
+          set { targetRotation = value; }
+      }
+
+      public float Stamina
+      {
+          get { return stamina; }
+          set { stamina = value; }
+      }
+
+      public float MaxStamina
+      {
+          get { return maxStamina; }
+      }
+
+      public bool StaminaRegenerated
+      {
+          get { return staminaRegenerated; }
+          set { staminaRegenerated = value; }
+      }
+
+      public bool IsSprinting
+      {
+          get { return isSprinting; }
+          set { isSprinting = value; }
+      }
     #endregion
-    
+
     #region Initialize script
     private void Awake()
     {
@@ -57,11 +92,13 @@ public class PlayerMovement: MonoBehaviour
         // Intenta encontrar un objeto con el script PlayerInputController adjunto.
         playerInputController = FindObjectOfType<PlayerInputController>();
         _controller = GetComponent<CharacterController>();
-
-        if (playerInputController == null)
+        staminaController = FindObjectOfType<StaminaController>(); //search the gameObject with the script
+        if (staminaController == null)
         {
-            Debug.LogError("PlayerInputController not found in the scene. Make sure it is attached to an object.");
+            Debug.LogError("StaminaController not found in the scene.");
         }
+
+        
     }
     #endregion
 
@@ -71,6 +108,7 @@ public class PlayerMovement: MonoBehaviour
     {
         GroundCheck();
         Move();
+        Sprint();
         Jump();
     }
 
@@ -81,9 +119,9 @@ public class PlayerMovement: MonoBehaviour
         {
             float targetSpeed = speed;
             if (playerInputController.moveDirection == Vector2.zero) targetSpeed = 0.0f;
-            
+
             Vector3 move = new Vector3(playerInputController.moveDirection.x, 0, playerInputController.moveDirection.y).normalized;
-            
+
             Vector3 currentHorizontalSpeed =
                 new Vector3(playerInputController.moveDirection.x, 0.0f, playerInputController.moveDirection.y);
 
@@ -98,17 +136,18 @@ public class PlayerMovement: MonoBehaviour
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
             Vector3 newPosition = transform.position + (new Vector3(move.x, verticalVelocity, move.z) * Time.deltaTime);
-            
+
             currentHorizontalSpeed = _mainCamera.transform.forward * currentHorizontalSpeed.z +
                                      _mainCamera.transform.right * currentHorizontalSpeed.x;
             currentHorizontalSpeed.y = 0.0f;
             float currentHorizontalSpeedMagnitude = currentHorizontalSpeed.magnitude;
-            
-            
-            
+
+
+
             _controller.Move(targetDirection.normalized *
                              (currentHorizontalSpeedMagnitude * Time.deltaTime * targetSpeed) +
                              new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
+            //SetFollowCameraRotation(true);
         }
         else
         {
@@ -117,8 +156,8 @@ public class PlayerMovement: MonoBehaviour
     }
     void GroundCheck()
     {
-        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,  transform.position.z);
-        isGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayer,QueryTriggerInteraction.Ignore);
+        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
+        isGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayer, QueryTriggerInteraction.Ignore);
         // if (_hasAnimator)
         // {
         //     _animator.SetBool(_animIDOnGround, Grounded);
@@ -126,7 +165,7 @@ public class PlayerMovement: MonoBehaviour
     }
     void Jump()
     {
- 
+
 
         // stop our velocity dropping when grounded
         if (isGrounded)
@@ -178,7 +217,24 @@ public class PlayerMovement: MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
         }
     }
+    void Sprint()
+    {
+        bool isSprinting = playerInputController.IsSprinting() && stamina > 0;
+        Debug.Log("Is Sprinting: " + isSprinting);
+        staminaRegenerated = isSprinting;
+        /*  if (staminaRegenerated)
+          {
+              isSprinting = true;
+              // stamina -= staminaDrain * Time.deltaTime;
+          }
 
+          if (stamina <= 0)
+          {
+              staminaRegenerated = false;
+              //staminaCanvas.alpha = 0;//ver como manejar el UGUI desde el controller
+          }*/
+    }
     #endregion
+
 
 }
