@@ -7301,8 +7301,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097a1ec16a8bb7a42ad1b0430649d368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staminaDrain: 0.5
-  staminaRegen: 0.5
+  staminaDrain: 7.6
+  staminaRegen: 8
   staminaImg: {fileID: 733778739}
   staminaPanel: {fileID: 2122270027}
 --- !u!1 &946786948

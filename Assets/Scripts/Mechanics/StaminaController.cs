@@ -9,10 +9,10 @@ public class StaminaController : MonoBehaviour
     [SerializeField] [Range(0, 50)] [Tooltip("Stablish the amount of stamina lost")] private float staminaDrain = 0.5f;
     [SerializeField] [Range(0, 50)] [Tooltip("Stablish the amount of stamina regenerated")] private float staminaRegen = 0.5f;
 
-   /* [Space(10)]
+    [Space(10)]
     [Header("Stamina speed parameters")]
     private int slowedRun = 4;
-    private int normalRun = 8; //ver si tiene que ver con la velocidad normal del player controller*/
+    /*private int normalRun = 8; //ver si tiene que ver con la velocidad normal del player controller*/
 
     [Space(10)]
     [Header("UGUI")]
@@ -20,12 +20,11 @@ public class StaminaController : MonoBehaviour
     [SerializeField] private GameObject staminaPanel;
 
     private PlayerMovement playerMovement;
-    private float regenerationTimer = 0f;
-    private float regenerationCooldown = 5f; // Tiempo en segundos antes de comenzar a regenerar la estamina
+    private Coroutine regenerationCoroutine;
+     bool isRegenerating = true;
     void Start()
     {
-        playerMovement = FindObjectOfType<PlayerMovement>();
-        //regenerationTimer = regenerationCooldown;
+        playerMovement = FindObjectOfType<PlayerMovement>();        
     }
     void Update()
     {
@@ -40,47 +39,43 @@ public class StaminaController : MonoBehaviour
         }
         else 
         {
-            RegenerateStamina();
+            StartCoroutine(RegenerateStaminaAfterDelay());
         }
     }
     void DrainStamina()
     {
         if (playerMovement.Stamina > 0)
         {
+            isRegenerating = false;
             playerMovement.Stamina -= staminaDrain * Time.deltaTime;
             StaminaUpdate();
-
         }
-            if (playerMovement.Stamina == 0)
-            {
-                regenerationTimer = regenerationCooldown; // Iniciar el temporizador de regeneración
-                playerMovement.IsSprinting = false;
-            }
 
+            StaminaUpdate();
+        
+
+    }
+
+    //Add a coroutine to cooldown stamina bar before regeneration
+    IEnumerator RegenerateStaminaAfterDelay()
+    {
+        if (playerMovement.Stamina <= 0) yield return new WaitForSeconds(1f);
+       
+            RegenerateStamina();
+      
     }
     void RegenerateStamina()
     {
-        if (regenerationTimer > 0)
+        if (playerMovement.Stamina < playerMovement.MaxStamina)
         {
-            regenerationTimer -= Time.deltaTime;
-            if (regenerationTimer <= 0)
-            {
-                ActivateStaminaPanel();
-            }
+            playerMovement.Stamina += staminaRegen * Time.deltaTime;
+            StaminaUpdate();
         }
         else
         {
-            if (playerMovement.Stamina < playerMovement.MaxStamina)
-            {
-                playerMovement.Stamina += staminaRegen * Time.deltaTime;
-                StaminaUpdate();
-            }
-            else 
-            {
-                playerMovement.Stamina = playerMovement.MaxStamina;
-                StaminaUpdate();
-                playerMovement.StaminaRegenerated = true;
-            }
+            playerMovement.Stamina = playerMovement.MaxStamina;
+            StaminaUpdate();
+            playerMovement.StaminaRegenerated = true;
         }
     }
 
@@ -93,8 +88,5 @@ public class StaminaController : MonoBehaviour
     {
         staminaPanel.SetActive(true);
     }
-    void DeactivateStaminaPanel()
-    {
-        staminaPanel.SetActive(false);
-    }
+
 }

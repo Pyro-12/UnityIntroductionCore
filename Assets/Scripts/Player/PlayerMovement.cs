@@ -133,7 +133,6 @@ public class PlayerMovement: MonoBehaviour
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
 
-
             Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
             Vector3 newPosition = transform.position + (new Vector3(move.x, verticalVelocity, move.z) * Time.deltaTime);
 
@@ -142,17 +141,12 @@ public class PlayerMovement: MonoBehaviour
             currentHorizontalSpeed.y = 0.0f;
             float currentHorizontalSpeedMagnitude = currentHorizontalSpeed.magnitude;
 
-
-
             _controller.Move(targetDirection.normalized *
                              (currentHorizontalSpeedMagnitude * Time.deltaTime * targetSpeed) +
                              new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
             //SetFollowCameraRotation(true);
         }
-        else
-        {
-            Debug.LogError("PlayerInputController is null. Make sure it is properly initialized.");
-        }
+       
     }
     void GroundCheck()
     {
@@ -165,7 +159,6 @@ public class PlayerMovement: MonoBehaviour
     }
     void Jump()
     {
-
 
         // stop our velocity dropping when grounded
         if (isGrounded)
