@@ -39,8 +39,8 @@ public class PlayerMovement: MonoBehaviour
     #endregion
 
     #region Auxiliary data
-
     //AUXILIARY DATA 
+
     [SerializeField] PlayerInputController playerInputController;
     [SerializeField] GameObject _mainCamera;
     CharacterController _controller;
@@ -61,14 +61,8 @@ public class PlayerMovement: MonoBehaviour
     private float jumpTimeoutDelta;
     private float fallTimeoutDelta;
     private float _terminalVelocity = 53.0f;
-    #region Stamina encapsulation
-    // Nuevas propiedades para encapsular targetRotation, stamina y otras
-    private float TargetRotation
-      {
-          get { return targetRotation; }
-          set { targetRotation = value; }
-      }
-
+   
+    #region Getters & Setters
       public float Stamina
       {
           get { return stamina; }
@@ -102,54 +96,38 @@ public class PlayerMovement: MonoBehaviour
 
     void GetReferences()
     {
-        // Intenta encontrar un objeto con el script PlayerInputController adjunto.
         playerInputController = FindObjectOfType<PlayerInputController>();
         _controller = GetComponent<CharacterController>();
         staminaController = FindObjectOfType<StaminaController>(); //search the gameObject with the script
-        if (staminaController == null)
-        {
-            Debug.LogError("StaminaController not found in the scene.");
-        }
-
-        
     }
     #endregion
-
 
     #region Script's logic
     void Update()
     {
         GroundCheck();
         Move();
-        //Sprint();
         Jump();
     }
 
     void Move()
     {
-        // Verifica si playerInputController es nulo antes de usarlo.
-        if (playerInputController != null)
-        {
-            //float targetSpeed = speed;
+            //checks if conditions are ok to allow sprint
             bool shouldSprint = playerInputController.IsSprinting() && stamina > 0 && staminaRegenerated;
 
             if (shouldSprint)
             {
                 IsSprinting = true;
-                //staminaRegenerated = false; // Indica que la stamina se está utilizando
-                targetSpeed = sprintSpeed; // Establece la velocidad durante el sprint
-                                           // DrainStamina(); // Drena la stamina durante el sprint
+                targetSpeed = sprintSpeed; // updates player velocity to sprint velocity
             }
             else
             {
                 IsSprinting = false;
-                //    RegenerateStamina(); // Regenera la stamina cuando no se está sprintando
-                targetSpeed = speed; // Restablece la velocidad normal
+                targetSpeed = speed; // speed back to normal --> TO-DO restriccion de movmiento por gasto de sprint
             }
 
-
+            // vector move for input direction
             if (playerInputController.moveDirection == Vector2.zero) targetSpeed = 0.0f;
-
             Vector3 move = new Vector3(playerInputController.moveDirection.x, 0, playerInputController.moveDirection.y).normalized;
            
             // normalise input direction
@@ -169,17 +147,14 @@ public class PlayerMovement: MonoBehaviour
             Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
             Vector3 newPosition = transform.position + (new Vector3(move.x, verticalVelocity, move.z) * Time.deltaTime);
 
-            currentHorizontalSpeed = _mainCamera.transform.forward * currentHorizontalSpeed.z +
-                                     _mainCamera.transform.right * currentHorizontalSpeed.x;
+            currentHorizontalSpeed = _mainCamera.transform.forward * currentHorizontalSpeed.z +_mainCamera.transform.right * currentHorizontalSpeed.x;
             currentHorizontalSpeed.y = 0.0f;
             float currentHorizontalSpeedMagnitude = currentHorizontalSpeed.magnitude;
 
-            _controller.Move(targetDirection.normalized *
-                             (currentHorizontalSpeedMagnitude * Time.deltaTime * targetSpeed) +
+        //translate into input controller
+            _controller.Move(targetDirection.normalized * (currentHorizontalSpeedMagnitude * Time.deltaTime * targetSpeed) +
                              new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
             //SetFollowCameraRotation(true);
-        }
-       
     }
     void GroundCheck()
     {
@@ -192,7 +167,6 @@ public class PlayerMovement: MonoBehaviour
     }
     void Jump()
     {
-
         // stop our velocity dropping when grounded
         if (isGrounded)
         {
@@ -210,7 +184,6 @@ public class PlayerMovement: MonoBehaviour
             {
                 Debug.Log("Salto");
                 verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
-
             }
             // jump timeout
             if (jumpTimeoutDelta >= 0.0f)
@@ -243,26 +216,5 @@ public class PlayerMovement: MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
         }
     }
-    void Sprint()
-    {
-        bool shouldSprint = playerInputController.IsSprinting() && stamina > 0 && staminaRegenerated;
-
-        if (shouldSprint)
-        {
-            IsSprinting = true;
-            //staminaRegenerated = false; // Indica que la stamina se está utilizando
-            targetSpeed = sprintSpeed; // Establece la velocidad durante el sprint
-           // DrainStamina(); // Drena la stamina durante el sprint
-        }
-        else
-        {
-            IsSprinting = false;
-        //    RegenerateStamina(); // Regenera la stamina cuando no se está sprintando
-            targetSpeed = speed; // Restablece la velocidad normal
-        }
-
-    }
     #endregion
-
-
 }

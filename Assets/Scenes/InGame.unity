@@ -461,12 +461,12 @@ GameObject:
   - component: {fileID: 302679071}
   - component: {fileID: 302679072}
   m_Layer: 0
-  m_Name: chestTrigger
+  m_Name: damageableObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &302679071
 Transform:
   m_ObjectHideFlags: 0
@@ -491,11 +491,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 302679070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc6d88bec9886ba479a046273286c707, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b76c6c6a007ad2489f4502633d51992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasInteraction: {fileID: 1394541867}
-  mesh: {fileID: 1512651855}
+  objectsToShoot:
+  - {fileID: 1763228768}
+  - {fileID: 1010502209}
+  - {fileID: 1370733726}
 --- !u!1 &338473619
 GameObject:
   m_ObjectHideFlags: 0
@@ -7067,8 +7069,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasTutorial: {fileID: 999569879}
-  isActive: 0
   mesh: {fileID: 1371829563}
+  isActive: 0
 --- !u!1 &785942241
 GameObject:
   m_ObjectHideFlags: 0
@@ -7149,8 +7151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasTutorial: {fileID: 999569879}
-  isActive: 0
   mesh: {fileID: 1371829563}
+  isActive: 0
 --- !u!1 &795298065
 GameObject:
   m_ObjectHideFlags: 0

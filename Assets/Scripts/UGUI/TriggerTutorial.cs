@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class TriggerTutorial : MonoBehaviour
 {
+    #region Data
+    [Header("UGUI")]
     [SerializeField] GameObject canvasTutorial;
-    [SerializeField] bool isActive;
     [SerializeField] GameObject mesh;//objeto que va a llevar el panel
-
+    #endregion
+    #region Auxiliary data
+    //AUXILIARY DATA
+    [SerializeField] bool isActive;
+    #endregion
+    #region Logic Script
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -22,4 +28,5 @@ public class TriggerTutorial : MonoBehaviour
             canvasTutorial.SetActive(false);
         }
     }
+    #endregion
 }
