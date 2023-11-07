@@ -7,23 +7,34 @@ public class PlayerMovement: MonoBehaviour
 {
     #region Data
     [Header("Player")]
-    [SerializeField] float speed;
-    [SerializeField] [Range(0.0f, 10f)]  float stamina = 10f;
-    [SerializeField] [Range(0.0f, 0.3f)] float rotationSmooth= 0.05f; // TO-DO rotacion en mov
+    [SerializeField] [Tooltip("Normal speed of the player")] float speed;
+
+    [SerializeField] [Tooltip("Sprint speed of the player")] private float sprintSpeed = 12f;
+
+    [SerializeField] [Tooltip("Enable srpint during some time")] [Range(0.0f, 10f)]  float stamina = 10f;
+
+    [SerializeField] [Tooltip("Control speed to face a movement direction")] 
+    [Range(0.0f, 0.3f)] float rotationSmooth= 0.05f; // TO-DO rotacion en mov
 
     [Space(10)] 
-    [Header("Jump")]
-    [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
+    [Header("Jump")][Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
     public float FallTimeout = 0.15f;
-    [SerializeField] float gravity = -9.81f; //stiamted, unity use his own gravity system
-    [SerializeField] float jumpHeight;
-    [Space(10)]
-    [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
+
+    [SerializeField] [Tooltip("The character uses its own gravity value with RB. Engine default is -9.81f")] 
+    float gravity = -9.81f; 
+
+    [SerializeField] [Tooltip("How hight can jump")] float jumpHeight;
+
+    [Space(10)][Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
     public float JumpTimeout = 0.50f;
 
-    [Space(10)] [Header("Player is grounded")] [Tooltip ("Scans the assignated layer in order to create the jump action")] [SerializeField] LayerMask GroundLayer;
-    [SerializeField] public float GroundedOffset = -0.14f;
-    [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")][SerializeField] public float GroundedRadius = 0.28f;
+    [Space(10)] [Header("Player is grounded")] [Tooltip ("Scans the assignated layer in order to create the jump action")] 
+    [SerializeField] LayerMask GroundLayer;
+
+    [SerializeField] [Tooltip("Useful for rough ground")] public float GroundedOffset = -0.14f;
+
+    [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
+    [SerializeField] public float GroundedRadius = 0.28f;
 
     #endregion
 
@@ -39,8 +50,9 @@ public class PlayerMovement: MonoBehaviour
     private float targetRotation;
     //Stamina
     private float maxStamina = 10f;
-    public bool staminaRegenerated = true;//añadir el hide in inspector
-    public bool isSprinting = true;//añadir el hide in inspector
+    [HideInInspector]public bool staminaRegenerated = true;
+    [HideInInspector] public bool isSprinting = true;
+    private float targetSpeed;  // Definir targetSpeed a nivel de clase
     //Jump aux data
     [SerializeField] bool isGrounded;
     private Vector3 playerVelocity;
@@ -49,9 +61,9 @@ public class PlayerMovement: MonoBehaviour
     private float jumpTimeoutDelta;
     private float fallTimeoutDelta;
     private float _terminalVelocity = 53.0f;
-
-     // Nuevas propiedades para encapsular targetRotation, stamina y otras
-      private float TargetRotation
+    #region Stamina encapsulation
+    // Nuevas propiedades para encapsular targetRotation, stamina y otras
+    private float TargetRotation
       {
           get { return targetRotation; }
           set { targetRotation = value; }
@@ -79,6 +91,7 @@ public class PlayerMovement: MonoBehaviour
           get { return isSprinting; }
           set { isSprinting = value; }
       }
+    #endregion
     #endregion
 
     #region Initialize script
@@ -108,7 +121,7 @@ public class PlayerMovement: MonoBehaviour
     {
         GroundCheck();
         Move();
-        Sprint();
+        //Sprint();
         Jump();
     }
 
@@ -117,16 +130,36 @@ public class PlayerMovement: MonoBehaviour
         // Verifica si playerInputController es nulo antes de usarlo.
         if (playerInputController != null)
         {
-            float targetSpeed = speed;
+            //float targetSpeed = speed;
+            bool shouldSprint = playerInputController.IsSprinting() && stamina > 0 && staminaRegenerated;
+
+            if (shouldSprint)
+            {
+                IsSprinting = true;
+                //staminaRegenerated = false; // Indica que la stamina se está utilizando
+                targetSpeed = sprintSpeed; // Establece la velocidad durante el sprint
+                                           // DrainStamina(); // Drena la stamina durante el sprint
+            }
+            else
+            {
+                IsSprinting = false;
+                //    RegenerateStamina(); // Regenera la stamina cuando no se está sprintando
+                targetSpeed = speed; // Restablece la velocidad normal
+            }
+
+
             if (playerInputController.moveDirection == Vector2.zero) targetSpeed = 0.0f;
 
             Vector3 move = new Vector3(playerInputController.moveDirection.x, 0, playerInputController.moveDirection.y).normalized;
-
+           
+            // normalise input direction
             Vector3 currentHorizontalSpeed =
                 new Vector3(playerInputController.moveDirection.x, 0.0f, playerInputController.moveDirection.y);
-
+            
+            // if there is a move input rotate player when the player is moving
             if (move != Vector3.zero)
             {
+                // rotate to face input direction relative to camera position
                 targetRotation = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg;
 
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity.y, rotationSmooth);
@@ -217,13 +250,16 @@ public class PlayerMovement: MonoBehaviour
         if (shouldSprint)
         {
             IsSprinting = true;
+            //staminaRegenerated = false; // Indica que la stamina se está utilizando
+            targetSpeed = sprintSpeed; // Establece la velocidad durante el sprint
+           // DrainStamina(); // Drena la stamina durante el sprint
         }
         else
         {
             IsSprinting = false;
+        //    RegenerateStamina(); // Regenera la stamina cuando no se está sprintando
+            targetSpeed = speed; // Restablece la velocidad normal
         }
-
-        staminaRegenerated = IsSprinting;
 
     }
     #endregion
