@@ -2,18 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectToBeShot : MonoBehaviour
+public class ShootableObjects : MonoBehaviour
 {
-    #region Data
-    [SerializeField] GameObject[] objectsToShoot;
+    #region Auxiliary data
+    bool isActive;
     #endregion
-    void Start()
-    {
-        
-    }
 
-    void Update()
+    public virtual void ActivateObject()
     {
-        
+        isActive = true;
+        Debug.Log(gameObject.name + " is now active.");
     }
 }
