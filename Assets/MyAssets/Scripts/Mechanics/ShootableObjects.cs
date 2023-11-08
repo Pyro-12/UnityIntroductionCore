@@ -5,6 +5,9 @@ public class ShootableObjects : MonoBehaviour
     #region Data
     [Header("Visuals")]
     [SerializeField] [Tooltip ("Activated object shows particles to indicate the state to the player")]ParticleSystem activatedObjectFX;
+    [Header("Animation")]
+    [SerializeField] Animator animator;
+    [SerializeField] string activationTrigger = "Activate"; // Nombre del trigger de activación en el Animator
     #endregion
     #region Auxiliary data
     //AUXILIARY DATA
@@ -14,6 +17,7 @@ public class ShootableObjects : MonoBehaviour
     private void Start()
     {
         activatedObjectFX.Stop();
+        SetActiveState(false); // Asegurarse de que el objeto esté inicialmente desactivado
     }
     #endregion
     #region Logic Script
@@ -33,9 +37,18 @@ public class ShootableObjects : MonoBehaviour
         if (isActive == true)
         {
             activatedObjectFX.Play();
-            //ACTIVAR ANIMACION
+            SetActiveState(true); // Activa la animación
+
         }
-        Debug.Log(gameObject.name + " is now active.");
+    }
+
+    // Método para cambiar el estado de la animación en el Animator
+    private void SetActiveState(bool state)
+    {
+        if (animator != null)
+        {
+            animator.SetBool(activationTrigger, state);
+        }
     }
     #endregion
 }
