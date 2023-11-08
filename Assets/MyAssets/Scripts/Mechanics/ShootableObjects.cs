@@ -11,25 +11,28 @@ public class ShootableObjects : MonoBehaviour
     #endregion
     #region Auxiliary data
     //AUXILIARY DATA
-    bool isActive;
+    bool isActive=false;
     #endregion
     #region Initialize script
     private void Start()
     {
         activatedObjectFX.Stop();
+        isActive = false;
         SetActiveState(false); // Asegurarse de que el objeto esté inicialmente desactivado
     }
     #endregion
+
     #region Logic Script
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Projectile")
         {
             Debug.Log("ay!");
-            //if object's get hit activate the vfx and counter in controller
+            // Si el objeto recibe un disparo, activa la VFX y la animación
             ActivateObject();
         }
     }
+
     public virtual void ActivateObject()
     {
         isActive = true;
@@ -38,7 +41,6 @@ public class ShootableObjects : MonoBehaviour
         {
             activatedObjectFX.Play();
             SetActiveState(true); // Activa la animación
-
         }
     }
 
@@ -47,7 +49,8 @@ public class ShootableObjects : MonoBehaviour
     {
         if (animator != null)
         {
-            animator.SetBool(activationTrigger, state);
+            // Utiliza el trigger para activar la animación
+            animator.SetTrigger(activationTrigger);
         }
     }
     #endregion
