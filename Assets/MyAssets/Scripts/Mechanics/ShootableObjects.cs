@@ -41,7 +41,7 @@ public class ShootableObjects : MonoBehaviour
         {
             activatedObjectFX.Play();
             SetActiveState(true); // Activa la animación
-        }
+        }   
     }
 
     // Método para cambiar el estado de la animación en el Animator
