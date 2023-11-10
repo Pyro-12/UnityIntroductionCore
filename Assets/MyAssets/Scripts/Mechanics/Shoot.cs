@@ -3,119 +3,99 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInputController))]
 public class Shoot : MonoBehaviour
 {
     #region Data
-    [Header ("Shoot")]
-    [SerializeField] GameObject projectile;
-    [SerializeField] float speed;
+    [Header("Shoot")]
+    [SerializeField] GameObject projectilePrefab;
+    [SerializeField] Transform launchPoint;
+    [SerializeField] float projectileForce;
+    [SerializeField] float cooldownTime = 3f;
     [SerializeField] bool shootPressed;
-    [Space(10)][Header("Weapon stats")]
+    [Space(10)]
+    [Header("Weapon stats")]
     [SerializeField] float range = 50;
     [SerializeField] float damage = 10f;
     [SerializeField] int maxAmmo = 10;
     [SerializeField] int currentAmmo = 10;
     [SerializeField] float fireRate = 100f;
-    [Header("Postpo")]
+    [Header("VFX")]
     [SerializeField] private ParticleSystem shootParticle;
     [SerializeField] private AudioSource shootAudioSource;
     #endregion
     #region Auxiliary data
-    //AUXILIARY DATA
+    // AUXILIARY DATA
+    private bool canShoot = true;
 
-    [SerializeField] bool canShoot;
     [SerializeField] bool isReloading;
+    private PlayerInputController playerInputController;
+
     #endregion
-    #region
+    #region Initialize Script
     private void Start()
     {
-        isReloading = false;
-
-    }
-    private void OnEnable()
-    {
-        try
-        {
-            InputSystem.EnableDevice(Gamepad.current);
-            InputSystem.EnableDevice(Keyboard.current);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("No se ha encontrado el componente " + e);
-        }
+        // Obtener referencia al PlayerInputController
+        playerInputController = GetComponentInParent<PlayerInputController>();
+        // Suscribirse al evento OnShoot
+        playerInputController.OnShoot += OnShoot;
     }
 
-    private void OnDisable()
-    {
-        InputSystem.DisableDevice(Gamepad.current);
-        InputSystem.DisableDevice(Keyboard.current);
-    }
     #endregion
     #region Script's logic
-    private void Update()
+    private void ShootProjectile()
     {
-        Fire();
-    }
-    void Fire ()
-    {
-        if (shootPressed)
-        {
-            Debug.Log("Disparo");
-            GameObject bala = Instantiate(projectile, transform.position, Quaternion.identity);
-
-            bala.GetComponent<Rigidbody>().AddForce(transform.forward * speed, ForceMode.Impulse);
-
-            Destroy(bala, 2f);
-
-            // Avoid multi-shots
-            shootPressed = false;
-        }
-
+        // Lógica para instanciar el proyectil
+        GameObject projectile = Instantiate(projectilePrefab, launchPoint.position, launchPoint.rotation);
+        Rigidbody rb = projectile.GetComponent<Rigidbody>();
     }
 
-    void PlayAudioAndSFX ()
+    private void ResetShootCooldown()
     {
-        if (shootPressed)
-        {
-            shootAudioSource.Play();
-        }
-        if (shootPressed)
-        {
-            
-            shootParticle.Play();
-        }
+        canShoot = false;
+        StartCoroutine(CooldownCoroutine());
+    }
 
+    private IEnumerator CooldownCoroutine()
+    {
+        yield return new WaitForSeconds(cooldownTime);
+        canShoot = true;
+    }
+
+    public void Reload()
+    {
+        if (isReloading)
+        {
+            Debug.Log("Reload");
+            isReloading = true;
+            // invoke? espera?
+        }
+    }
+
+    void PlayAudioAndSFX()
+    {
+        shootAudioSource.Play();
+        shootParticle.Play();
+    }
+    #endregion
+    #region Input System Relation
+    private void OnShoot(InputAction.CallbackContext context)
+    {
+        if (canShoot)
+        {
+            Debug.Log("Disparando");
+            ShootProjectile();
+            PlayAudioAndSFX();
+            //Re-start condition for coroutine
+            ResetShootCooldown();
+        }
         else
         {
-            Debug.Log("No audio/SFX found");
+            Debug.Log("No se puede disparar en este momento");
         }
     }
+    #endregion
 
-    //Creates the rapid fire shot --Poir finalizar
-    public IEnumerator RapidFire() 
-    {
-        while (true)
-        {
-            Fire();
-            yield return new WaitForSeconds(1 / fireRate);
-        }
-    }
-    #region Input logic
-    public void OnFire(InputAction.CallbackContext context)
-    {
-        // check if it's being done.
-        if (context.performed)
-        {
-            Debug.Log("Btt shoot pressed");
-            shootPressed = true;
-            PlayAudioAndSFX();
-        }
-        else if (context.canceled)
-        {
-            // Puedes manejar algo especï¿½fico cuando se deja de presionar el botï¿½n
-            //Hacer animacion de que no tenga balas
-        }
-    }
-    #endregion
-    #endregion
 }
+
+

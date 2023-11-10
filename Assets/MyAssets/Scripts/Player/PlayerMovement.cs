@@ -14,7 +14,13 @@ public class PlayerMovement: MonoBehaviour
     [SerializeField] [Tooltip("Enable srpint during some time")] [Range(0.0f, 10f)]  float stamina = 10f;
 
     [SerializeField] [Tooltip("Control speed to face a movement direction")] 
-    [Range(0.0f, 0.3f)] float rotationSmooth= 0.05f; // TO-DO rotacion en mov
+    [Range(0.0f, 0.3f)] float rotationSmooth= 0.05f; 
+    
+    [Space(10)] [Header("CrossHair")]
+    [Tooltip("Player FPS Camera center")][SerializeField] private Transform _playerFpsCameraCenter;
+
+    [Tooltip("Player Weapon center")]
+    public Transform playerWeaponCenter;
 
     [Space(10)] 
     [Header("Jump")][Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
@@ -105,9 +111,9 @@ public class PlayerMovement: MonoBehaviour
     #region Script's logic
     void Update()
     {
+        Jump();
         GroundCheck();
         Move();
-        Jump();
     }
 
     void Move()
@@ -117,6 +123,7 @@ public class PlayerMovement: MonoBehaviour
 
             if (shouldSprint)
             {
+            Debug.Log("sprint");
                 IsSprinting = true;
                 targetSpeed = sprintSpeed; // updates player velocity to sprint velocity
             }
@@ -167,31 +174,42 @@ public class PlayerMovement: MonoBehaviour
     }
     void Jump()
     {
-        // stop our velocity dropping when grounded
         if (isGrounded)
         {
             // reset the fall timeout timer
             fallTimeoutDelta = FallTimeout;
 
-            playerVelocity.y = 0.0f;
+            // if (_hasAnimator)
+            // {
+            //     _animator.SetBool(_animIDJump, false);
+            // }
+
             // stop our velocity dropping infinitely when grounded
             if (verticalVelocity < 0.0f)
             {
                 verticalVelocity = -2f;
             }
-            // Jump pressed and player on ground
+
+            // Jump
             if (playerInputController.jump && jumpTimeoutDelta <= 0.0f)
             {
-                Debug.Log("Salto");
+                Debug.LogFormat("isjumpin");
+                // update animator if using character
+                // if (_hasAnimator)
+                // {
+                //     _animator.SetBool(_animIDJump, true);
+                // }
+
+                // the square root of H * -2 * G = how much velocity needed to reach desired height
                 verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
+
             // jump timeout
             if (jumpTimeoutDelta >= 0.0f)
             {
                 jumpTimeoutDelta -= Time.deltaTime;
             }
         }
-
         else
         {
             // reset the jump timeout timer
@@ -202,6 +220,7 @@ public class PlayerMovement: MonoBehaviour
             {
                 fallTimeoutDelta -= Time.deltaTime;
             }
+
             // if we are not grounded, do not jump
             playerInputController.jump = false;
         }

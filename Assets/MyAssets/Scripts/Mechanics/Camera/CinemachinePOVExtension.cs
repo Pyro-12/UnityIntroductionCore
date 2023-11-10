@@ -20,7 +20,7 @@ public class CinemachinePOVExtension : CinemachineExtension
 
     protected override void Awake()
     {
-        playerInputController = PlayerInputController.Instance; 
+        //playerInputController = PlayerInputController.Instance; 
         base.Awake();
     }
     protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
@@ -30,7 +30,7 @@ public class CinemachinePOVExtension : CinemachineExtension
             if (stage == CinemachineCore.Stage.Aim)
             {
                 if (startingRotation == null) startingRotation = transform.localRotation.eulerAngles;
-                if (playerInputController == null) playerInputController = PlayerInputController.Instance;
+               // if (playerInputController == null) playerInputController = PlayerInputController.Instance;
                 if (playerInputController == null) return;
                 Vector2 delta = playerInputController.GetMouseDelta();//ver como coger las 3 acciones
                 startingRotation.x += delta.x * Time.deltaTime;
