@@ -12,6 +12,8 @@ public class AIController : MonoBehaviour
     [SerializeField] [Tooltip("Area for focus in player follow")] float radius;
 
     Transform currentTarget;
+    Animator animator;
+    bool isChasingPlayer;
 
     #endregion
 
@@ -42,11 +44,11 @@ public class AIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerPersecuted();
+        ChasingPlayer();
        
     }
 
-    void PlayerPersecuted ()
+    void ChasingPlayer ()
     {
         playerIsNear = false;
         int playerLayer = LayerMask.GetMask("Character");
@@ -61,6 +63,7 @@ public class AIController : MonoBehaviour
                 enemy.destination = currentTarget.position;
             }
         }
+      //  ChangeAnimationState(); // TO-DO animacion enemigo
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -71,6 +74,11 @@ public class AIController : MonoBehaviour
             Destroy(gameObject, 2f);
 
         }
+    }
+
+    void ChangeAnimationState()
+    {
+        animator.SetBool("ChasePlayer", isChasingPlayer);
     }
     #endregion
 }

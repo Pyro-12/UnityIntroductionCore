@@ -48,11 +48,23 @@ public class PlayerStats : MonoBehaviour
     void OnTriggerStay(Collider other)
     {
         Debug.Log("OnTriggerStay");
+
         if (other.CompareTag("Enemy"))
         {
+            Debug.Log("Collision with enemy detected.");
+
             EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
-            TakeDamage(enemyHealth.damage);
-            Debug.Log(health);
+
+            if (enemyHealth != null)
+            {
+                Debug.Log("EnemyHealth component found. Taking damage.");
+                TakeDamage(enemyHealth.damage);
+                Debug.Log(health);
+            }
+            else
+            {
+                Debug.LogWarning("No se encontró el componente EnemyHealth en el objeto: " + other.name);
+            }
         }
     }
     #endregion

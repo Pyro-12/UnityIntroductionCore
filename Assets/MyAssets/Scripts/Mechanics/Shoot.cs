@@ -52,29 +52,60 @@ public class Shoot : MonoBehaviour
         // Lógica para instanciar el proyectil
         GameObject projectile = Instantiate(projectilePrefab, launchPoint.position, launchPoint.rotation);
 
-       /* if (projectile != null)
-        {
-            // Obtener la dirección del proyectil
-            Vector3 shootDirection = launchPoint.forward;
 
-            // Obtener o agregar el componente Projectile
-            Projectile projectileComponent = projectile.GetComponent<Projectile>();
-            if (projectileComponent == null)
+        /* if (projectile != null)
+         {
+             // Obtener la dirección del proyectil
+             Vector3 shootDirection = launchPoint.forward;
+
+             // Obtener o agregar el componente Projectile
+             Projectile projectileComponent = projectile.GetComponent<Projectile>();
+             if (projectileComponent == null)
+             {
+                 projectileComponent = projectile.AddComponent<Projectile>();
+             }
+
+             // Establecer la velocidad del proyectil
+             projectileComponent.SetSpeed(projectileSpeed);
+
+             // Iniciar el movimiento del proyectil
+             projectileComponent.Move(shootDirection);
+
+             
+         }*/
+
+        // Lanzar un Raycast desde la posición de lanzamiento en la dirección hacia adelante
+        if (projectile != null)
+        {
+            // Obtener el componente Rigidbody del proyectil
+            Rigidbody projectileRigidbody = projectile.GetComponent<Rigidbody>();
+
+            if (projectileRigidbody != null)
             {
-                projectileComponent = projectile.AddComponent<Projectile>();
+                // Aplicar velocidad al proyectil
+                projectileRigidbody.velocity = launchPoint.forward * projectileSpeed;
             }
 
-            // Establecer la velocidad del proyectil
-            projectileComponent.SetSpeed(projectileSpeed);
+            // Lanzar un Raycast desde la posición de lanzamiento en la dirección hacia adelante
+            Ray ray = new Ray(launchPoint.position, launchPoint.forward);
+            RaycastHit hit;
 
-            // Iniciar el movimiento del proyectil
-            projectileComponent.Move(shootDirection);
+            if (Physics.Raycast(ray, out hit, range))
+            {
+                // Verificar si el objeto impactado tiene el componente EnemyHealth
+                EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
 
+                // Si tiene el componente, aplicarle daño
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(weaponDamage);
+                }
+
+                // También podrías realizar otras acciones aquí, como efectos visuales o sonidos
+            }
             //Destroy after shoot
             Destroy(projectile, 2.0f);
-        }*/
-
-
+        }
     }
 
     private void ResetShootCooldown()
