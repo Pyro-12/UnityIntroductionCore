@@ -126,6 +126,7 @@ public class PlayerInputController : MonoBehaviour
     public Vector2 GetMouseDelta() 
     {
         return playerInput.InGame.Look.ReadValue<Vector2>();
+
     }
 
     private void OnDeviceLost(InputDevice device)

@@ -20,10 +20,11 @@ public class GunPositionController : MonoBehaviour
     {
         if (cinemachineCam != null)
         {
-            Vector3 camRotation = cinemachineCam.localRotation.eulerAngles;
+            // Obtener la rotación de la cámara Cinemachine
+            Quaternion camRotation = cinemachineCam.rotation;
 
-            // Aplicar la rotación de la cámara en todos los ejes al arma
-            transform.localRotation = Quaternion.Euler(camRotation.x, camRotation.y, camRotation.z);
+            // Aplicar la rotación de la cámara al arma
+            transform.rotation = camRotation;
         }
         else
         {

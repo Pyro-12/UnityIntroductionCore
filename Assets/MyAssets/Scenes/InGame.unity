@@ -30112,9 +30112,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5387a3e3901a5cd48b2f1e08b322dc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _horizontalSpeed: 20
-  _verticalSpeed: 20
-  _clampAngle: 80
+  horizontalSpeed: 1
+  verticalSpeed: 1
+  clampAngle: 80
 --- !u!1001 &2084114925
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30412,6 +30412,10 @@ PrefabInstance:
     - target: {fileID: 7273360907871123116, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7273360907871123116, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: verticalSpeed
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

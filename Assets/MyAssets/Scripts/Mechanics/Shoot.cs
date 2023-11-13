@@ -28,7 +28,6 @@ public class Shoot : MonoBehaviour
     #region Auxiliary data
     // AUXILIARY DATA
     private bool canShoot = true;
-
     [SerializeField] bool isReloading;
     private PlayerInputController playerInputController;
 
@@ -41,8 +40,7 @@ public class Shoot : MonoBehaviour
         playerInputController = GetComponentInParent<PlayerInputController>();
         // Suscribirse al evento OnShoot
         playerInputController.OnShoot += OnShoot;
-
-       
+ 
     }
 
     #endregion
@@ -52,27 +50,6 @@ public class Shoot : MonoBehaviour
         // Lógica para instanciar el proyectil
         GameObject projectile = Instantiate(projectilePrefab, launchPoint.position, launchPoint.rotation);
 
-
-        /* if (projectile != null)
-         {
-             // Obtener la dirección del proyectil
-             Vector3 shootDirection = launchPoint.forward;
-
-             // Obtener o agregar el componente Projectile
-             Projectile projectileComponent = projectile.GetComponent<Projectile>();
-             if (projectileComponent == null)
-             {
-                 projectileComponent = projectile.AddComponent<Projectile>();
-             }
-
-             // Establecer la velocidad del proyectil
-             projectileComponent.SetSpeed(projectileSpeed);
-
-             // Iniciar el movimiento del proyectil
-             projectileComponent.Move(shootDirection);
-
-             
-         }*/
 
         // Lanzar un Raycast desde la posición de lanzamiento en la dirección hacia adelante
         if (projectile != null)
@@ -108,16 +85,17 @@ public class Shoot : MonoBehaviour
         }
     }
 
-    private void ResetShootCooldown()
-    {
-        canShoot = false;
-        StartCoroutine(CooldownCoroutine());
-    }
-
+    //coroutine for waiting in-between shots
     private IEnumerator CooldownCoroutine()
     {
         yield return new WaitForSeconds(cooldownTime);
         canShoot = true;
+    }
+
+    private void ResetShootCooldown()
+    {
+        canShoot = false;
+        StartCoroutine(CooldownCoroutine());
     }
 
     public void Reload()
@@ -129,12 +107,13 @@ public class Shoot : MonoBehaviour
             // invoke? espera?
         }
     }
-
+    #region SFX & VFX
     void PlayAudioAndSFX()
     {
         shootAudioSource.Play();
         shootParticle.Play();
     }
+    #endregion
     #endregion
     #region Input System Relation
     private void OnShoot(InputAction.CallbackContext context)
