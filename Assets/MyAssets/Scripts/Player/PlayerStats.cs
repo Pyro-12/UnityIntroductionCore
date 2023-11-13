@@ -18,17 +18,41 @@ public class PlayerStats : MonoBehaviour
     {
         //health = _maxHealth;
     }
-    //implement take damage
-    void TakeDamage()
+
+    private void Update()
     {
-        if (health < 0)
+        //TakeDamage();
+
+    }
+    //implement take damage
+    void TakeDamage(float damage)
+    {
+        Debug.Log("Player ha recibido daño: " + damage);
+        health -= damage;
+       
+        
+        if (health <= 0)
         {
-            isDead = false;
+            //isDead = true;
+            PlayerDead();
         }
 
-        else
+    }
+
+    void PlayerDead ()
+    {
+        isDead = true;
+        //animator.SetTrigger("Dead"); //TO-DO animation dead for 3person
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        Debug.Log("OnTriggerStay");
+        if (other.CompareTag("Enemy"))
         {
-            isDead = true;
+            EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
+            TakeDamage(enemyHealth.damage);
+            Debug.Log(health);
         }
     }
     #endregion

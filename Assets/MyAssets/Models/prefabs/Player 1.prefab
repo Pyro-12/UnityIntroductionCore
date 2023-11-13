@@ -15,9 +15,10 @@ GameObject:
   - component: {fileID: 7054497303893602088}
   - component: {fileID: 8650380334763661102}
   - component: {fileID: 7273360907871123116}
+  - component: {fileID: 7177505813623274295}
   m_Layer: 7
   m_Name: Player 1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,7 +139,7 @@ MonoBehaviour:
   JumpTimeout: 0.5
   GroundLayer:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 136
   GroundedOffset: -0.14
   GroundedRadius: 0.28
   playerInputController: {fileID: 7964297925141754860}
@@ -167,11 +168,32 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 617490013860926402}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 547a9ddf0289baf47b130e67cdb58cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!135 &7177505813623274295
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617490013860926402}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1765597565753461886
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +371,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4113657408286499108}
   - component: {fileID: 2210051900890153758}
+  - component: {fileID: 5850917881096472479}
   - component: {fileID: 1984537271086675830}
   - component: {fileID: 7904512067138675239}
   m_Layer: 7
@@ -387,18 +410,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 0}
   launchPoint: {fileID: 4113657408286499108}
-  projectileForce: 5
+  projectileSpeed: 30
   cooldownTime: 3
   shootPressed: 0
   range: 0
-  damage: 0
-  maxAmmo: 10
+  weaponDamage: 10
   currentAmmo: 10
+  maxAmmo: 10
   fireRate: 100
   shootParticle: {fileID: 0}
   shootAudioSource: {fileID: 1984537271086675830}
-  canShoot: 0
   isReloading: 0
+--- !u!114 &5850917881096472479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3909555761492662405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6983f929497b7e7438f50b62caaeb006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletSpeed: 0
+  myDir: {x: 0, y: 0, z: 0}
+  speed: 30
 --- !u!82 &1984537271086675830
 AudioSource:
   m_ObjectHideFlags: 0

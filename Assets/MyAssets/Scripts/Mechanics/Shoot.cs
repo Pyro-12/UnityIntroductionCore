@@ -10,17 +10,18 @@ public class Shoot : MonoBehaviour
     [Header("Shoot")]
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] Transform launchPoint;
-    [SerializeField] float projectileForce;
-    [SerializeField] float cooldownTime = 3f;
+    [SerializeField] float projectileSpeed = 30f;
+    [SerializeField][Tooltip ("Cooldown time between shots")] float cooldownTime = 3f;
     [SerializeField] bool shootPressed;
-    [Space(10)]
-    [Header("Weapon stats")]
+
+    [Space(10)] [Header("Weapon stats")]
+    [SerializeField] float weaponDamage = 10f;
     [SerializeField] float range = 50;
-    [SerializeField] float damage = 10f;
-    [SerializeField] int maxAmmo = 10;
-    [SerializeField] int currentAmmo = 10;
     [SerializeField] float fireRate = 100f;
-    [Header("VFX")]
+    [SerializeField] int currentAmmo = 10;
+    [SerializeField] int maxAmmo = 10;
+
+    [Space(10)][Header("VFX")]
     [SerializeField] private ParticleSystem shootParticle;
     [SerializeField] private AudioSource shootAudioSource;
     #endregion
@@ -33,12 +34,15 @@ public class Shoot : MonoBehaviour
 
     #endregion
     #region Initialize Script
+
     private void Start()
     {
         // Obtener referencia al PlayerInputController
         playerInputController = GetComponentInParent<PlayerInputController>();
         // Suscribirse al evento OnShoot
         playerInputController.OnShoot += OnShoot;
+
+       
     }
 
     #endregion
@@ -47,7 +51,30 @@ public class Shoot : MonoBehaviour
     {
         // Lógica para instanciar el proyectil
         GameObject projectile = Instantiate(projectilePrefab, launchPoint.position, launchPoint.rotation);
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+
+       /* if (projectile != null)
+        {
+            // Obtener la dirección del proyectil
+            Vector3 shootDirection = launchPoint.forward;
+
+            // Obtener o agregar el componente Projectile
+            Projectile projectileComponent = projectile.GetComponent<Projectile>();
+            if (projectileComponent == null)
+            {
+                projectileComponent = projectile.AddComponent<Projectile>();
+            }
+
+            // Establecer la velocidad del proyectil
+            projectileComponent.SetSpeed(projectileSpeed);
+
+            // Iniciar el movimiento del proyectil
+            projectileComponent.Move(shootDirection);
+
+            //Destroy after shoot
+            Destroy(projectile, 2.0f);
+        }*/
+
+
     }
 
     private void ResetShootCooldown()

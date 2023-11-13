@@ -165,8 +165,13 @@ public class PlayerMovement: MonoBehaviour
     }
     void GroundCheck()
     {
-        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-        isGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayer, QueryTriggerInteraction.Ignore);
+        Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
+                transform.position.z);
+        isGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayer,
+            QueryTriggerInteraction.Ignore);
+
+        Debug.Log("Sphere Position: " + spherePosition);
+        Debug.Log("Is Grounded: " + isGrounded);
         // if (_hasAnimator)
         // {
         //     _animator.SetBool(_animIDOnGround, Grounded);

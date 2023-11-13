@@ -38,6 +38,7 @@ public class PlayerInputController : MonoBehaviour
 
     private void SubscribeToDelegatesAndUpdateValues()
     {
+        playerInput.InGame.Move.started += OnMove;
         playerInput.InGame.Move.performed += OnMove;
         playerInput.InGame.Move.canceled += OnMove;
 
@@ -54,12 +55,13 @@ public class PlayerInputController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext value)
     {
         moveDirection = value.ReadValue<Vector2>();
+        //Debug.Log("Move Direction: " + moveDirection);
     }
 
     public void OnJump(InputAction.CallbackContext value)
     {
-        Debug.Log("Jump Input: " + playerInput.InGame.Jump);
         JumpState(value.ReadValue<float>());
+        Debug.Log("Jump: " + jump);
     }
 
     public void OnSprint(InputAction.CallbackContext value)
@@ -107,6 +109,7 @@ public class PlayerInputController : MonoBehaviour
 
     private void UnsubscribeToDelegates()
     {
+        playerInput.InGame.Move.started -= OnMove;
         playerInput.InGame.Move.performed -= OnMove;
         playerInput.InGame.Move.canceled -= OnMove;
 
@@ -123,5 +126,11 @@ public class PlayerInputController : MonoBehaviour
     public Vector2 GetMouseDelta() 
     {
         return playerInput.InGame.Look.ReadValue<Vector2>();
+    }
+
+    private void OnDeviceLost(InputDevice device)
+    {
+        Debug.LogWarning("Device lost: " + device);
+        // Realizar acciones específicas cuando se pierde el dispositivo, si es necesario.
     }
 }
