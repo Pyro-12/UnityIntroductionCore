@@ -30341,6 +30341,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1655946401669344742, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: m_UpdateMethod
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1655946401669344742, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: m_BlendUpdateMethod
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2210051900890153758, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
       propertyPath: shootParticle
       value: 
@@ -30401,6 +30409,10 @@ PrefabInstance:
       propertyPath: GroundedRadius
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7054497303893602088, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
+      propertyPath: playerFpsCameraCenter
+      value: 
+      objectReference: {fileID: 5147004872159111367}
     - target: {fileID: 7054497303893602088, guid: c62e46a76e6a32a48ae9ab2c8770c29a, type: 3}
       propertyPath: _playerFpsCameraCenter
       value: 

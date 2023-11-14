@@ -18,6 +18,11 @@ public class GunPositionController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GunPosition();
+    }
+
+   public void GunPosition()
+    {
         if (cinemachineCam != null)
         {
             // Obtener la rotación de la cámara Cinemachine
