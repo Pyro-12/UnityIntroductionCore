@@ -21,7 +21,11 @@ public class ShootableObjects : MonoBehaviour
         SetActiveState(false); // Asegurarse de que el objeto esté inicialmente desactivado
     }
     #endregion
-
+    // Método público para obtener el valor de isActive
+    public bool GetIsActive()
+    {
+        return isActive;
+    }
     #region Logic Script
     private void OnCollisionEnter(Collision collision)
     {

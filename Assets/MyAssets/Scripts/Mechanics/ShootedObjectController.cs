@@ -5,6 +5,7 @@ public class ShootedObjectController : MonoBehaviour
 {
     #region Data
     [SerializeField] float activationDelay = 5f;
+    [SerializeField] GameObject nextAreaLock;
     [SerializeField] ShootableObjects[] shootableObjects;
     #endregion
 
@@ -17,6 +18,7 @@ public class ShootedObjectController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(ActivateObjectsWithDelay());
+        GetComponent<ShootableObjects>();
     }
     #endregion
     #region Logic Script
@@ -28,11 +30,11 @@ public class ShootedObjectController : MonoBehaviour
 
         foreach (var shootableObject in shootableObjects)
         {
-           /* if (shootableObject != null && !shootableObject.isActive)
+            if (shootableObject != null && !shootableObject.GetIsActive())
             {
                 allObjectsActivated = false;
                 break;
-            }*/
+            }
         }
 
         if (!allObjectsActivated)
@@ -50,6 +52,8 @@ public class ShootedObjectController : MonoBehaviour
 
     void UnlockNextArea()
     {
+        //animation 
+        nextAreaLock.SetActive(false);
 
     }
     #endregion
