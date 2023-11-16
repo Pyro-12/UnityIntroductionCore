@@ -61,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
     //Movement aux data
     public GameObject MainCamera => _mainCamera;
     private float targetRotation;
+    bool isMoving;
     //Stamina
     private float maxStamina = 10f;
     [HideInInspector] public bool staminaRegenerated = true;
@@ -126,51 +127,51 @@ public class PlayerMovement : MonoBehaviour
     }
     void Move()
         {
-            //checks if conditions are ok to allow sprint
-            bool shouldSprint = playerInputController.IsSprinting() && stamina > 0 && staminaRegenerated;
+        // vector move for input direction
+        Vector3 move = new Vector3(playerInputController.moveDirection.x, 0, playerInputController.moveDirection.y).normalized;
+        move = playerFpsCameraCenter.forward * move.z + playerFpsCameraCenter.right * move.x;
 
-            if (shouldSprint)
-            {
-                Debug.Log("sprint");
-                IsSprinting = true;
-                targetSpeed = sprintSpeed; // updates player velocity to sprint velocity
-            }
-            else
-            {
-                IsSprinting = false;
-                targetSpeed = speed; // speed back to normal --> TO-DO restriccion de movmiento por gasto de sprint
-            }
+        // normalize input direction
+        Vector3 currentHorizontalSpeed = new Vector3(playerInputController.moveDirection.x, 0.0f, playerInputController.moveDirection.y);
 
-            // vector move for input direction
-            //if (playerInputController.moveDirection == Vector2.zero) targetSpeed = 0.0f;
-            Vector3 move = new Vector3(playerInputController.moveDirection.x, 0, playerInputController.moveDirection.y).normalized;
-            move = playerFpsCameraCenter.forward * move.z + playerFpsCameraCenter.right * move.x; //añadimos la rotación de la cam para que el arma siga
+        // check if there is a move input and rotate player when moving
+        if (move != Vector3.zero)
+        {
+            // rotate to face input direction relative to camera position
+            targetRotation = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg;
 
-            // normalise input direction
-            Vector3 currentHorizontalSpeed =
-                new Vector3(playerInputController.moveDirection.x, 0.0f, playerInputController.moveDirection.y);
+            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity.y, rotationSmooth);
+            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+        }
 
-            // if there is a move input rotate player when the player is moving
-            if (move != Vector3.zero)
-            {
-                // rotate to face input direction relative to camera position
-                targetRotation = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg;
+        Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
+        Vector3 newPosition = transform.position + (new Vector3(move.x, verticalVelocity, move.z) * Time.deltaTime);
 
-                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref playerVelocity.y, rotationSmooth);
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-            }
+        currentHorizontalSpeed = _mainCamera.transform.forward * currentHorizontalSpeed.z + _mainCamera.transform.right * currentHorizontalSpeed.x;
+        currentHorizontalSpeed.y = 0.0f;
+        float currentHorizontalSpeedMagnitude = currentHorizontalSpeed.magnitude;
 
-            Vector3 targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
-            Vector3 newPosition = transform.position + (new Vector3(move.x, verticalVelocity, move.z) * Time.deltaTime);
+        // translate into input controller
+        _controller.Move(targetDirection.normalized * (currentHorizontalSpeedMagnitude * Time.deltaTime * targetSpeed) +
+                         new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
 
-            currentHorizontalSpeed = _mainCamera.transform.forward * currentHorizontalSpeed.z + _mainCamera.transform.right * currentHorizontalSpeed.x;
-            currentHorizontalSpeed.y = 0.0f;
-            float currentHorizontalSpeedMagnitude = currentHorizontalSpeed.magnitude;
+        // Update the isMoving variable based on the movement input
+        isMoving = move != Vector3.zero;
 
-            //translate into input controller
-            _controller.Move(targetDirection.normalized * (currentHorizontalSpeedMagnitude * Time.deltaTime * targetSpeed) +
-                             new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
-      }
+        // checks if conditions are ok to allow sprint
+        bool shouldSprint = playerInputController.IsSprinting() && stamina > 0 && staminaRegenerated && isMoving;
+
+        if (shouldSprint)
+        {
+            IsSprinting = true;
+            targetSpeed = sprintSpeed; // updates player velocity to sprint velocity
+        }
+        else
+        {
+            IsSprinting = false;
+            targetSpeed = speed; // speed back to normal
+        }
+    }
     void GroundCheck()
         {
             Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
