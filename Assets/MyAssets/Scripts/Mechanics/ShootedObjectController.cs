@@ -16,18 +16,23 @@ public class ShootedObjectController : MonoBehaviour
     [Space(10)]
     [Header("UGUI Interface")]
     [SerializeField] Image timerBar;
+    [SerializeField] GameObject timerCanvas;
     #endregion
 
     #region Auxiliary data
     // AUXILIARY DATA
     private bool allObjectsActivated;
     private Coroutine activationCoroutine; // Referencia a la corutina para poder detenerla si es necesario
+    private bool isCoroutineRunning = false;
+
     #endregion
 
     #region Initialize script
     private void Start()
     {
-        // Suscribirse al evento de activación del objeto
+        timerCanvas.SetActive(false);
+
+        
         foreach (var shootableObject in shootableObjects)
         {
             if (shootableObject != null)
@@ -39,7 +44,7 @@ public class ShootedObjectController : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Desuscribirse del evento al destruir el objeto
+        //Quit subscription when object's destroyed.
         foreach (var shootableObject in shootableObjects)
         {
             if (shootableObject != null)
@@ -53,18 +58,25 @@ public class ShootedObjectController : MonoBehaviour
     #region Logic Script
     private void OnObjectActivated()
     {
-        // Si algún objeto se activa, reiniciamos el temporizador
-        if (activationCoroutine != null)
+        // Evitar reiniciar la corutina innecesariamente
+        if (!isCoroutineRunning)
         {
-            StopCoroutine(activationCoroutine);
-        }
+            // Si algún objeto se activa, reiniciamos el temporizador
+            if (activationCoroutine != null)
+            {
+                StopCoroutine(activationCoroutine);
+            }
 
-        activationCoroutine = StartCoroutine(ActivateObjectsWithDelay());
+            activationCoroutine = StartCoroutine(ActivateObjectsWithDelay());
+        }
     }
 
     IEnumerator ActivateObjectsWithDelay()
     {
-        allObjectsActivated = false;
+        isCoroutineRunning = true;
+
+        timerCanvas.SetActive(true);
+        allObjectsActivated = true;
 
         float timer = activationDelay;
 
@@ -78,9 +90,33 @@ public class ShootedObjectController : MonoBehaviour
             yield return null;
         }
 
-        // Cuando se agota el tiempo, desactivar todos los objetos y reiniciar la barra
-        DeactivateAllObjects();
-        timerBar.fillAmount = 0f;
+        // Restaurar el estado de la corutina
+        isCoroutineRunning = false;
+
+        // Look if all objects are active prior to unlock next area.
+        foreach (var shootableObject in shootableObjects)
+        {
+            if (shootableObject != null && !shootableObject.GetIsActive())
+            {
+                allObjectsActivated = false;
+                break;
+            }
+        }
+
+        if (allObjectsActivated)
+        {
+            Debug.Log("All objects activated. Triggering next action.");
+            //When time's over and all objects are active, unlock next area.
+            UnlockNextArea();
+        }
+        else
+        {
+            Debug.Log("Not all objects activated. Resetting timer.");
+            //If not all objects are activated, deactivate the objects and restart de bar coroutine for timer.
+            DeactivateAllObjects();
+            timerBar.fillAmount = 0f;
+            timerCanvas.SetActive(false);
+        }
 
         yield return null;
     }
@@ -89,6 +125,7 @@ public class ShootedObjectController : MonoBehaviour
     {
         // animation 
         nextAreaLock.SetActive(false);
+        timerCanvas.SetActive(false);
     }
 
     void DeactivateAllObjects()

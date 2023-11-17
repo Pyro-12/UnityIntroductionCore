@@ -1415,6 +1415,7 @@ MonoBehaviour:
   - {fileID: 9200111387968428191}
   - {fileID: 1059915042}
   timerBar: {fileID: 889551850}
+  timerCanvas: {fileID: 1242769736}
 --- !u!1 &265905914
 GameObject:
   m_ObjectHideFlags: 0
@@ -1601,6 +1602,14 @@ PrefabInstance:
       propertyPath: activatedObjectFX
       value: 
       objectReference: {fileID: 1797723778}
+    - target: {fileID: 3749241023661062224, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3749241023661062224, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5620138209477327839, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
       propertyPath: m_Name
       value: Magic_Box_low (1)
@@ -35347,20 +35356,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 1973184416}
     m_Modifications:
     - target: {fileID: -7208339827707526913, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
-      propertyPath: animator
-      value: 
-      objectReference: {fileID: 9200111387968428190}
-    - target: {fileID: -7208339827707526913, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
       propertyPath: activatedObjectFX
       value: 
       objectReference: {fileID: 1558586472}
     - target: {fileID: 5620138209477327839, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
       propertyPath: m_Name
       value: Magic_Box_low
-      objectReference: {fileID: 0}
-    - target: {fileID: 5620138209477327839, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8372641621634239501, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -35405,10 +35406,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5620138209477327839, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9200111387968428190}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
 --- !u!1 &6352914594219796666
 GameObject:
@@ -35456,11 +35454,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Damping: 0
---- !u!1 &7637487350762064077 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5620138209477327839, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
-  m_PrefabInstance: {fileID: 6040288708577347413}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7686767927360005261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35753,33 +35746,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8372641621634239501, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
   m_PrefabInstance: {fileID: 6040288708577347413}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &9200111387968428190
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7637487350762064077}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 16f246c7d35c4f74e858041c1a938b54, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &9200111387968428191 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -7208339827707526913, guid: 50b212ae171b90a4b83e1bc24e542be7, type: 3}
   m_PrefabInstance: {fileID: 6040288708577347413}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7637487350762064077}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b76c6c6a007ad2489f4502633d51992, type: 3}
