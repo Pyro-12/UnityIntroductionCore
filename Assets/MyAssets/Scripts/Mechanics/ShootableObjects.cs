@@ -12,6 +12,7 @@ public class ShootableObjects : MonoBehaviour
     #region Auxiliary data
     //AUXILIARY DATA
     bool isActive=false;
+    public event System.Action OnActivated;
     #endregion
     #region Initialize script
     private void Start()
@@ -37,7 +38,7 @@ public class ShootableObjects : MonoBehaviour
         }
     }
 
-    public virtual void ActivateObject()
+    public  void ActivateObject()
     {
         isActive = true;
 
@@ -48,6 +49,16 @@ public class ShootableObjects : MonoBehaviour
         }   
     }
 
+    public  void DeactivateObject()
+    {
+        isActive = false;
+        if (isActive == false)
+        {
+            activatedObjectFX.Stop();
+            SetActiveState(false);
+        }
+    }
+
     // Método para cambiar el estado de la animación en el Animator
     private void SetActiveState(bool state)
     {
@@ -55,6 +66,12 @@ public class ShootableObjects : MonoBehaviour
         {
             // Utiliza el trigger para activar la animación
             animator.SetTrigger(activationTrigger);
+
+            // Notificar que el objeto se ha activado
+            if (state)
+            {
+                OnActivated?.Invoke();
+            }
         }
     }
     #endregion
