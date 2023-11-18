@@ -65,7 +65,7 @@ public class ShootableObjects : MonoBehaviour
         if (animator != null)
         {
             // Utiliza el trigger para activar la animación
-            animator.SetTrigger(activationTrigger);
+            //animator.SetTrigger(activationTrigger);
 
             // Notificar que el objeto se ha activado
             if (state)

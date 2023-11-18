@@ -17,11 +17,14 @@ public class ShootedObjectController : MonoBehaviour
     [Header("UGUI Interface")]
     [SerializeField] Image timerBar;
     [SerializeField] GameObject timerCanvas;
+    [Header ("Animation")]
+    [SerializeField] Animator animator;
+    [SerializeField] string activationTrigger = "isActive"; // Nombre del trigger de activación en el Animator
     #endregion
 
     #region Auxiliary data
     // AUXILIARY DATA
-    private bool allObjectsActivated;
+    [SerializeField]private bool allObjectsActivated;
     private Coroutine activationCoroutine; // Referencia a la corutina para poder detenerla si es necesario
     private bool isCoroutineRunning = false;
 
@@ -31,7 +34,7 @@ public class ShootedObjectController : MonoBehaviour
     private void Start()
     {
         timerCanvas.SetActive(false);
-
+            
         
         foreach (var shootableObject in shootableObjects)
         {
@@ -108,6 +111,8 @@ public class ShootedObjectController : MonoBehaviour
             Debug.Log("All objects activated. Triggering next action.");
             //When time's over and all objects are active, unlock next area.
             UnlockNextArea();
+            animator.SetBool("isActive", true);
+            Debug.Log("Animator set to true.");
         }
         else
         {
@@ -116,6 +121,9 @@ public class ShootedObjectController : MonoBehaviour
             DeactivateAllObjects();
             timerBar.fillAmount = 0f;
             timerCanvas.SetActive(false);
+            // SetActiveState(false);
+            animator.SetBool("isActive", false);
+            Debug.Log("Animator set to false.");
         }
 
         yield return null;
@@ -124,8 +132,10 @@ public class ShootedObjectController : MonoBehaviour
     void UnlockNextArea()
     {
         // animation 
-        nextAreaLock.SetActive(false);
+        //nextAreaLock.SetActive(false);
         timerCanvas.SetActive(false);
+        animator.SetBool("isActive", true);
+        Debug.Log(animator);
     }
 
     void DeactivateAllObjects()
@@ -138,5 +148,6 @@ public class ShootedObjectController : MonoBehaviour
             }
         }
     }
+
     #endregion
 }
