@@ -25,7 +25,7 @@ public class PlayerStats : MonoBehaviour
 
     }
     //implement take damage
-    void TakeDamage(float damage)
+   public  void TakeDamage(float damage)
     {
         Debug.Log("Player ha recibido daño: " + damage);
         health -= damage;
