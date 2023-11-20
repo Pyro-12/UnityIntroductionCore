@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+
         RestartGameSession();
         SubscribeToDelegatesAndUpdateValues();
     }
@@ -109,6 +110,12 @@ public class GameManager : MonoBehaviour
         }
 
         OnPauseGame?.Invoke(Instance.isPaused);
+    }
+
+    public void WinGameEvent()
+    {
+        Debug.Log("WinGameEvent called");
+        OnWinGame?.Invoke();
     }
 
     public void OnNewGame()

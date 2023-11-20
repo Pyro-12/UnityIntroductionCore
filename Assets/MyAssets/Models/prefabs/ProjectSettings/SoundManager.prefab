@@ -48,8 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonClip: {fileID: 8300000, guid: 533ed1b58ec810a4aac69badaec9bcbb, type: 3}
   backgroundMusic:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 62c5eed72bc7da74a9d1b5e87ca4840c, type: 3}
   EffectsAudioVolume: 0.5
   MusicAudioVolume: 0.4
   backgroundAudio: {fileID: 0}
@@ -68,7 +67,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

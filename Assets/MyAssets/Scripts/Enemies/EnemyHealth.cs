@@ -31,6 +31,9 @@ public class EnemyHealth : MonoBehaviour
             Instantiate(explosionPrefab, transform.position, transform.rotation);
 
         }
+        GameManager.Instance.WinGameEvent();
         Destroy(gameObject); //destruimos gobject enemigo
+
+        // Llama al evento OnWinGame después de la muerte del enemigo
     }
 }
