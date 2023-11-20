@@ -71,7 +71,9 @@ public class AIController : MonoBehaviour
         if (collision.gameObject.CompareTag("Projectile"))
         {
             Debug.Log("Me han dado");
+            GameManager.Instance.WinGameEvent();
             Destroy(gameObject, 2f);
+
 
         }
     }

@@ -12,7 +12,6 @@ public class WinUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("WinUI Start");
         _winPanel.SetActive(false);
         gameManager = GameManager.Instance;
         SubscribeToEvents();
